@@ -1,0 +1,118 @@
+/* General Styles */
+#invoice {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    padding: 32px;
+    color: #333333;
+  }
+  
+  #invoice h1,
+  #invoice h2,
+  #invoice h3 {
+    margin: 0;
+    padding: 0;
+  }
+  
+  #invoice h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000;
+  }
+  
+  #invoice h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  #invoice h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  
+  /* Header Section */
+  #invoice .invoice-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  
+  #invoice .invoice-header div {
+    text-align: left;
+  }
+  
+  #invoice .invoice-header div:last-child {
+    text-align: right;
+  }
+  
+  /* Bill To Section */
+  #invoice .bill-to {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  
+  #invoice .bill-to div {
+    text-align: left;
+  }
+  
+  /* Table Styles */
+  #invoice table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 32px;
+  }
+  
+  #invoice table th,
+  #invoice table td {
+    padding: 8px;
+    text-align: right;
+    border-bottom: 1px solid #dddddd;
+  }
+  
+  #invoice table th:first-child,
+  #invoice table td:first-child {
+    text-align: left;
+  }
+  
+  #invoice table th {
+    font-weight: bold;
+    background-color: #f9f9f9;
+  }
+  
+  #invoice table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  
+  /* Total Section */
+  #invoice .total-section {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  #invoice .total-section div {
+    width: 33%;
+  }
+  
+  #invoice .total-section .subtotal,
+  #invoice .total-section .total {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  
+  #invoice .total-section .total {
+    font-weight: bold;
+    border-top: 2px solid #dddddd;
+    padding-top: 8px;
+  }
+  
+  /* Footer */
+  #invoice .invoice-footer {
+    text-align: center;
+    margin-top: 32px;
+    color: #666666;
+    font-size: 14px;
+  }
