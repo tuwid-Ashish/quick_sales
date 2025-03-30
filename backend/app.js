@@ -1,6 +1,11 @@
 import express  from "express";
 import cookieParser from "cookie-parser";
 import Cors from "cors";
+import path from "path"
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app =  express()
 
@@ -13,6 +18,14 @@ app.use(express.json({limit:"18kb"}))
 app.use(cookieParser())
 app.use(express.static("public"))
 app.use(express.urlencoded({ extended: true }))
+
+
+// // Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'public/build')));
+
+// app.get('*', (req, res) => {
+//     res.sendFile(path.resolve(__dirname, 'public', 'build', 'index.html'));
+// });
 
 app.get("/",(req,res)=>{
     res.send("hello moto")

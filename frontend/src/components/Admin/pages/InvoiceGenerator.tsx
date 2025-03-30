@@ -26,9 +26,12 @@ interface OrderDetail {
         };
         quantity: number;
     }>;
+    paymentStatus:string;
+    orderDate?:number|string|undefined;
     totalAmount: number;
     status: string;
     shippingAddress: string; 
+    shipped:boolean;
     createdAt: string|number|Date|undefined;
 }
 
@@ -100,7 +103,7 @@ const InvoiceGenerator = ({ isOpen, onClose, orderId }:OrderDetailPageProps) => 
                         </div>
                         <div className="text-right">
                             <p className="font-bold">Invoice #: {orderData?._id}</p>
-                            <p>Date: {new Date(orderData?.orderDate).toLocaleDateString()}</p>
+                            <p>Date: {orderData?.orderDate ? new Date(orderData.orderDate).toLocaleDateString() : "N/A"}</p>
                         </div>
                     </div>
 

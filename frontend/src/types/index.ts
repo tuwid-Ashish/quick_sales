@@ -29,7 +29,7 @@ export interface Signdata{
 }
 
 export interface ProductFormData {
-  _id?:string;
+  _id:string;
   existingImages?: string[];
   name: string;
   price: number;

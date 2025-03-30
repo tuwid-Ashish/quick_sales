@@ -28,8 +28,8 @@ router.route("/delete-product/:id").delete(AuthTokenverify, DeleteSaleProduct);
 
 // refreral related routes
 router.route("/list-referrals").get(AuthTokenverify, ListReferrals);
-router.route("/approve-commssion").post(AuthTokenverify, ApproveCommission);
-router.route("/reject-commssion").post(AuthTokenverify, RejectCommission);
+router.route("/approve-commission/:id").post(AuthTokenverify, ApproveCommission);
+router.route("/reject-commission/:id").post(AuthTokenverify, RejectCommission);
 
 // admin gerneral routes
 router.route("/get-orders").get(AuthTokenverify, GetOrders);

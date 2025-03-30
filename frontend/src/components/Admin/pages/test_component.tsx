@@ -71,38 +71,38 @@ export default FileUploader;
 
 
 
-const orderdetails = {
-  ...customerData,
-  id :product._id,
-  referral: referral_data
+// const orderdetails = {
+//   ...customerData,
+//   id :product._id,
+//   referral: referral_data
 
-}
+// }
 
 
-CreateOder(orderdetails).then((response)=>{
-  console.log(response.data,response);
-  const data = response.data
-  // return
-  const options: RazorpayOptions = {
-    key: data.key_id,
-    amount: product.price ||data.product.price, // Amount in paisa
-    currency: "INR",
-    name: customerData.name,
-    description: product.description,
-    callbackurl:`${ import.meta.env.VITE_SERVER_URI}/payment/PaymentVerification`,
-    prefill: {
-      name: customerData.name,
-      email: customerData.email,
-      contact: customerData.phone,
-    },
-    theme: {
-      color: "#6366F1",
-    },
-  };
-  console.log("the build optons are :", options);
+// CreateOder(orderdetails).then((response)=>{
+//   console.log(response.data,response);
+//   const data = response.data
+//   // return
+//   const options: RazorpayOptions = {
+//     key: data.key_id,
+//     amount: product.price ||data.product.price, // Amount in paisa
+//     currency: "INR",
+//     name: customerData.name,
+//     description: product.description,
+//     callbackurl:`${ import.meta.env.VITE_SERVER_URI}/payment/PaymentVerification`,
+//     prefill: {
+//       name: customerData.name,
+//       email: customerData.email,
+//       contact: customerData.phone,
+//     },
+//     theme: {
+//       color: "#6366F1",
+//     },
+//   };
+//   console.log("the build optons are :", options);
   
-  const razorpay = new (window as any).Razorpay(options);
-  razorpay.open();
+//   const razorpay = new (window as any).Razorpay(options);
+//   razorpay.open();
 
 
 

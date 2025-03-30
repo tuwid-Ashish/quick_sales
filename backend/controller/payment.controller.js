@@ -10,12 +10,23 @@ import {
 } from "../config/constants.js";
 import Shop from "../models/shop.model.js";
 import { Commission } from "../models/Commission.model.js";
-import { createContact, fetchContactByRefrenceId, fetchFundAccountsByContactId } from "../services/payout_to_refreal.js";
+import {
+  createContact,
+  createFundAccount,
+  fetchContactByRefrenceId,
+  fetchFundAccountsByContactId,
+} from "../services/payout_to_refreal.js";
+import mongoose from "mongoose";
 
 export const CreateOrder = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const instance = CreateRazerpayInstance();
     const { id, name, phone, email, referral, address } = req.body;
+    console.log("the method is sent:",req.body);
+    
     // Validate required fields
     if (!id || !name || !phone || !address) {
       return res
@@ -38,17 +49,15 @@ export const CreateOrder = async (req, res) => {
     console.log("the data in refreal", referral);
     if (referral) {
       agent = await Shop.findOne({
-        status: "success",
+        status: "approved",
         isActive: true,
         referralCode: referral,
       });
+
       if (!agent) {
         console.warn(`Invalid referral code: ${referral}`);
       }
     }
-
-    const session = await mongoose.startSession();
-    session.startTransaction();
 
     // Create order document first
     const newOrder = await Order.create(
@@ -58,6 +67,7 @@ export const CreateOrder = async (req, res) => {
             product: product.id,
             priceAtPurchase: product.price,
             quantity: 1,
+            name:product.name
           },
         ],
         totalAmount: product.price,
@@ -65,15 +75,14 @@ export const CreateOrder = async (req, res) => {
         shop: agent || undefined,
         shippingAddress: address,
         customer: {
-          name,
+          name:name|| "Ashish",
           phoneNumber: phone,
           email: email || undefined,
         },
         paymentStatus: "pending",
       },
-      { session }
     );
-    console.log();
+    console.log("the order is has ", newOrder);
 
     // Create Razorpay order
     const razorpayOptions = {
@@ -202,34 +211,51 @@ export const CapturePayment = async (req, res) => {
       { new: true }
     );
 
-    if (updatedOrder.referralCode) {
-      const shop = await Shop.findById(updatedOrder.shop);
-      if (shop) {
-        const commissionAmount = (updatedOrder.totalAmount * shop.commissionRate) / 100;
-        const check_fund = fetchContactByRefrenceId(shop._id.toString())
-        let fund_ac = null 
-        if(!check_fund){
-            check_fund = createContact(shop)
-            const fund_ac = createFundAccount(check_fund)
-        }  
-
-        const newCommission = new Commission({
-          shop: shop._id,
-          order: updatedOrder._id,
-          amount: commissionAmount,
-        });
-        
-        const savedCommission = await newCommission.save();
-
-    }
- 
-    }
-
     if (!updatedOrder) {
       console.error("Order not found in database");
       return res.redirect(
         `${DOMAIN_URL}/payment-status?status=failed&order_id=${"null"}`
       );
+    }
+
+    // If referral exists, handle commission recording
+    if (updatedOrder.referralCode) {
+      const shop = await Shop.findById(updatedOrder.shop);
+      if (shop) {
+        const commissionAmount =
+          (updatedOrder.totalAmount * shop.commissionRate) / 100;
+        // Check if Razorpay contact/fund account exists for this shop (referral)
+        let contact = await fetchContactByRefrenceId(shop._id.toString());
+        if (!contact) {
+          // Create contact if not exists
+          contact = await createContact(shop);
+          if (!contact) {
+            console.error("Failed to create Razorpay contact for referral");
+            // Optionally, you can decide to halt further processing or continue without payout
+          } else {
+            // Create fund account for the contact
+            const fundAccount = await createFundAccount(
+              contact.id,
+              shop.bankDetails
+            );
+            if (!fundAccount) {
+              console.error(
+                "Failed to create Razorpay fund account for referral"
+              );
+            }
+          }
+        }
+
+        // Record commission for admin approval
+        const newCommission = new Commission({
+          shop: shop._id,
+          order: updatedOrder._id,
+          commissionAmount: commissionAmount,
+          transaction:updatedOrder._id,
+          status: "pending", // ensure initial status is pending
+        });
+        await newCommission.save();
+      }
     }
 
     return res.redirect(
@@ -240,6 +266,58 @@ export const CapturePayment = async (req, res) => {
     return res.redirect(
       `${DOMAIN_URL}/payment-status?status=failed&order_id=${"null"}`
     );
+  }
+};
+
+
+// Function to process commission after admin approval
+export const processCommission = async (commissionId) => {
+  try {
+    const commission = await Commission.findById(commissionId).populate("shop");
+    if (!commission || commission.status !== "pending") {
+      throw new Error("Invalid or already processed commission.");
+    }
+
+    const shop = commission.shop;
+
+    // Check if contact already exists
+    let contact = await fetchContactByRefrenceId(shop._id.toString());
+    if (!contact) {
+      // Create new contact if not found
+      contact = await createContact(shop);
+    }
+
+    // Check if fund account already exists
+    let fundAccount = await fetchFundAccountsByContactId(contact.id);
+    if (!fundAccount) {
+      // Create new fund account if not found
+      fundAccount = await createFundAccount(contact.id, shop.bankDetails);
+    }
+
+    // Create a payout after admin approval
+    // This function should be called after the admin has approved the commission
+    const payout = await razorpay.payouts.create({
+      account_number: process.env.RAZORPAY_ACCOUNT_NUMBER,
+      fund_account_id: fundAccount.id,
+      amount: commission.amount * 100, // Amount in paise
+      currency: "INR",
+      mode: "IMPS",
+      purpose: "commission_payment",
+      queue_if_low_balance: true,
+      reference_id: commission._id.toString(),
+      narration: `Commission for order ${commission.order}`,
+    });
+
+    // Update commission status
+    commission.status = "paid";
+    commission.payoutId = payout.id;
+    await commission.save();
+
+    console.log(
+      `Payout ${payout.id} created successfully for commission ${commission._id}.`
+    );
+  } catch (error) {
+    console.error("Error processing commission payout:", error);
   }
 };
 
@@ -280,54 +358,3 @@ export const GetPayment = async (req, res) => {
     });
   }
 };
-
-
-
-  // Function to process commission after admin approval
-export const processCommission = async (commissionId) => {
-    try {
-      const commission = await Commission.findById(commissionId).populate('shop');
-      if (!commission || commission.status !== 'pending') {
-        throw new Error('Invalid or already processed commission.');
-      }
-  
-      const shop = commission.shop;
-  
-      // Check if contact already exists
-      let contact = await fetchContactByRefrenceId(shop._id.toString());
-      if (!contact) {
-        // Create new contact if not found
-        contact = await createContact(shop);
-      }
-  
-      // Check if fund account already exists
-      let fundAccount = await fetchFundAccountsByContactId(contact.id);
-      if (!fundAccount) {
-        // Create new fund account if not found
-        fundAccount = await createFundAccount(contact.id, shop.bankDetails);
-      }
-  
-      // Create a payout after admin approval
-      // This function should be called after the admin has approved the commission
-      const payout = await razorpay.payouts.create({
-        account_number: process.env.RAZORPAY_ACCOUNT_NUMBER,
-        fund_account_id: fundAccount.id,
-        amount: commission.amount * 100, // Amount in paise
-        currency: 'INR',
-        mode: 'IMPS',
-        purpose: 'commission_payment',
-        queue_if_low_balance: true,
-        reference_id: commission._id.toString(),
-        narration: `Commission for order ${commission.order}`,
-      });
-  
-      // Update commission status
-      commission.status = 'paid';
-      commission.payoutId = payout.id;
-      await commission.save();
-  
-      console.log(`Payout ${payout.id} created successfully for commission ${commission._id}.`);
-    } catch (error) {
-      console.error('Error processing commission payout:', error);
-    }
-  };

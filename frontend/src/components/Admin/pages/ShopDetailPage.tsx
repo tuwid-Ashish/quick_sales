@@ -1,6 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
-import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
 import { GetShopById, EditShop } from "@/api";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,7 @@ interface ShopDetail {
     agent: {
         username: string;
         email: string;
+        phone:string;
     };
     bankDetails: {
         accountNumber: string;
@@ -31,6 +31,9 @@ interface ShopDetail {
         name: string;
         phone: string;
         email: string;
+    };
+    location: {
+        coordinates: number[];
     };
     isActive: boolean;
 }
@@ -156,6 +159,7 @@ function ShopDetailPage({ shopId, isOpen, onClose,onUpdateShop }: ShopDetailPage
                                     <p>PAN Number: {shopData.businessDetails.panNumber}</p>
                                     {shopData.businessDetails.gstNumber && <p>GST Number: {shopData.businessDetails.gstNumber}</p>}
                                     {shopData.businessDetails.registrationNumber && <p>Registration Number: {shopData.businessDetails.registrationNumber}</p>}
+                                    {shopData.location.coordinates && <p>geo coordinates: {shopData.location.coordinates[0]}, {shopData.location.coordinates[1]}</p>}
                                 </CardContent>
                             </Card>
 

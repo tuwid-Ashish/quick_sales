@@ -12,7 +12,7 @@ import { processCommission } from "./payment.controller.js";
 
 const AddSaleProduct = asyncHandler(async (req,res)=>{
     try {
-        if(req.user.role !== "agent"){
+        if(req.user.role !== "admin"){
             throw new ApiError(403,"You are not authorized to perform this action")
         }
         console.log("my body",req.body,req.files);
@@ -206,10 +206,31 @@ const ListReferrals = asyncHandler(async (req, res) => {
 
         // Filter options
         const filter = {};
+        
+        // Add status filter if provided
         if (req.query.status) {
             filter.status = req.query.status;
         }
 
+        // Add date filter if provided
+        if (req.query.date) {
+            const startDate = new Date(req.query.date);
+            const endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + 1);
+            filter.createdAt = {
+                $gte: startDate,
+                $lt: endDate
+            };
+        }
+
+        // Add search filter if provided
+        if (req.query.search) {
+            filter.$or = [
+                { 'shop.name': { $regex: req.query.search, $options: 'i' } },
+                { 'shop.contactPerson': { $regex: req.query.search, $options: 'i' } }
+            ];
+        }
+        
         // Fetch commissions with populated data
         const commissions = await Commission.find(filter)
             .populate({
@@ -241,55 +262,74 @@ const ListReferrals = asyncHandler(async (req, res) => {
             })
         );
     } catch (error) {
-        return res.status(400).json(new ApiError(400,error))
+        return res.status(400).json(new ApiError(400, error));
     }
 });
 
-const ApproveCommission = asyncHandler(async (req,res)=>{
-    try {
-        const { id } = req.params;
-        if(req.user.role !== "admin"){
-            throw new ApiError(403,"You are not authorized to perform this action")
-        }
-        const commission = await Commission
-        .findById(id)
-        if(!commission){
-            throw new ApiError(404,"Commission not found")
-        }
-        commission.status = "approved"
-        const payout = processCommission(commission._id)
-        
-        // ReleaseFunds(commission) method from payment gateway 
-    } catch (error) {
-        
+const ApproveCommission = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+  
+    // Authorization check
+    if (req.user.role !== "admin") {
+      throw new ApiError(403, "You are not authorized to perform this action");
     }
-})
-
-const RejectCommission = asyncHandler(async (req,res)=>{
-    try {
-        if(req.user.role !== "admin"){
-            throw new ApiError(403,"You are not authorized to perform this action")
-        }
-        const { id } = req.params;
-        const commission = await Commission
-        .findById(id)
-        if(!commission){
-            throw new ApiError(404,"Commission not found")
-        }
-        commission.status = "rejected"
-
-        await commission.save()
-        return new ApiResponse(200,{
-            message:"Commission rejected successfully",
-            commission
-        })
-    } catch (error) {
-        throw new ApiError(400,error)
+  
+    // Find the commission document
+    const commission = await Commission.findById(id);
+    if (!commission) {
+      throw new ApiError(404, "Commission not found");
     }
-}
-)
 
+    // Process the commission payout
+    let payout;
+    try {
+      payout = await processCommission(commission._id);
+    } catch (error) {
+      console.error("Error initiating payout:", error);
+      throw new ApiError(500, "Payout initiation failed");
+    }
+  
+    if (!payout) {
+      throw new ApiError(500, "Payout initiation failed");
+    }
+    
+    // Update commission status to approved and save
+    commission.status = "approved";
+    await commission.save();
 
+    // Return successful response with commission and payout details
+    return res.status(200).json(new ApiResponse(200, {
+      message: "Commission approved successfully",
+      commission,
+      payout,
+    }));
+  });
+  
+  const RejectCommission = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+  
+    // Authorization check
+    if (req.user.role !== "admin") {
+      throw new ApiError(403, "You are not authorized to perform this action");
+    }
+  
+    // Find the commission document
+    const commission = await Commission.findById(id);
+    if (!commission) {
+      throw new ApiError(404, "Commission not found");
+    }
+  
+    // Update commission status to rejected and save
+    commission.status = "rejected";
+    await commission.save();
+  
+    // Return a successful rejection response
+    return res.status(200).json(new ApiResponse(200, {
+      message: "Commission rejected successfully",
+      commission,
+    }));
+  });
+  
 const GetOrders = asyncHandler(async (req, res) => {
     try {
         if (req.user.role !== "admin") {
@@ -322,7 +362,7 @@ const GetOrders = asyncHandler(async (req, res) => {
             .skip(skip)
             .limit(limit)
             .populate("products.product", "name price") // Populate product details
-            .populate("agent", "name email"); // Populate agent details
+            .populate("shop", "name email"); // Populate agent details
 
         // Get total count for pagination metadata
         const totalOrders = await Order.countDocuments(filter);
@@ -359,7 +399,7 @@ const GetOrderById = asyncHandler(async (req,res)=>{
             path: 'products.product',
             select: 'name description images price category'
             })
-            .populate('agent', 'fullname email phone')
+            .populate('shop', 'fullname email phone')
         if(!order){
             throw new ApiError(404,"Order not found")
         }   

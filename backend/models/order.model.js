@@ -2,8 +2,8 @@ import { Schema, model } from 'mongoose';
 
 const orderSchema = new Schema({
   customer: {
-    name: { type: String, required: true },
-    phoneNumber: { type: String, required: true },
+    name: { type: String },
+    phoneNumber: { type: String },
     email: { type: String},
   },
   products: [
@@ -11,6 +11,7 @@ const orderSchema = new Schema({
       product: { type: Schema.Types.ObjectId, ref: "Product", required: true },
       quantity: { type: Number, required: true,default:1 },
       priceAtPurchase: { type: Number, required: true }, // to record the price at the time of purchase
+      name:{type: String}
     },
   ],
   totalAmount: { 

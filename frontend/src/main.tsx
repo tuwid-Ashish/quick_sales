@@ -6,7 +6,7 @@ import './index.css'
 import { Provider } from 'react-redux'
 import { store } from './Store/Store.js'
 import Signupform from './components/Auth/signup_page.tsx'
-import VerifyEmail from './components/Auth/VerifyEmail.jsx'
+// import VerifyEmail from './components/Auth/VerifyEmail.jsx'
 import LoginPage from './components/Auth/login_component.tsx'
 import ResetPassword from './components/Auth/Resetpasword.tsx'
 import AuthLayout from './components/AuthLayout.tsx'
@@ -77,7 +77,7 @@ const router = createBrowserRouter([
         </AuthLayout>
       },
       { path: '/reset-password', element:<ResetPassword />},
-      { path: '/verifyEmail', element:<VerifyEmail /> },
+      // { path: '/verifyEmail', element:<VerifyEmail /> },
 
     ],
   },

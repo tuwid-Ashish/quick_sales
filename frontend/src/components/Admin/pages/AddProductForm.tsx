@@ -159,7 +159,10 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
       .then((response) => {
         // Construct complete product data (including images URLs if needed)
         // Here, for onAddProduct you can merge form input with extra data
-        onAddProduct({ ...data, images: previewImages });
+        onAddProduct({
+          ...data, images: previewImages,
+          _id: ""
+        });
         console.log("The response is:", response);
         setOpen(false);
         reset();

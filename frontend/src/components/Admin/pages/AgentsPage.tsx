@@ -118,7 +118,7 @@ export default function AgentsPage() {
         setdialogname(false);
       };
 
-    const updateShopInState = (updatedShop) => {
+    const updateShopInState = (updatedShop:Shop) => {
         setState((prev) => ({
             ...prev,
             shops: prev.shops.map((shop) =>
@@ -201,6 +201,7 @@ export default function AgentsPage() {
                             <TableHead>Agent</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead>Commission Rate</TableHead>
+                            <TableHead>Locations coordinator</TableHead>
                             <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -231,21 +232,17 @@ export default function AgentsPage() {
                                 </TableCell>
                                 <TableCell>{shop.commissionRate}%</TableCell>
                                 <TableCell>
+                                Longitude: {shop.location.coordinates[0]}, Latitude: {shop.location.coordinates[1]}
+                                </TableCell><TableCell>
                                     <div className="flex gap-2">
-                                        <Button 
-                                            variant="outline" 
-                                            size="sm"
-                                            onClick={() => window.location.href = `/admin/shops/${shop._id}`}
-                                        >
-                                            View
-                                        </Button>
+                                        
                                         {userRole === "admin" && (
                                             <Button 
-                                                variant="default" 
+                                                variant="outline" 
                                                 size="sm"
                                                 onClick={() => handleViewDetails(shop._id)}
                                             >
-                                                Edit
+                                                View
                                             </Button>
                                         )}
                                     </div>

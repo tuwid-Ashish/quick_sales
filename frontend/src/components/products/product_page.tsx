@@ -2,22 +2,26 @@
 import { ProductFormData } from "@/types";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { CreateOder, GetProductById } from "@/api";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAppSelector } from "@/Store/Store";
+import { useAppDispatch, useAppSelector } from "@/Store/Store";
+import { addrefreral } from "@/Store/ReferalSlice";
 
 // Define types for Product and Customer
 interface RazorpayOptions {
   key: string;
+  order_id:string;
+  callback_url:string;
+  image:string;
   amount: number;
   currency: string;
   name: string;
   description: string;
-  handler: (response: any) => void;
+  // handler: (response: any) => void;
   prefill: {
     name: string;
     email: string;
@@ -39,6 +43,8 @@ const ProductDetailPage: React.FC = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<ProductFormData | null>(null);
   const referral_data = useAppSelector((state)=>state.referal.referal_id)
+  const location = useLocation(); // Hook to access the current URL
+  const dispatch = useAppDispatch(); // Hook to dispatch actions to Redux
   console.log("the data in refreal id", referral_data);
   
   useEffect(() => {
@@ -54,6 +60,18 @@ const ProductDetailPage: React.FC = () => {
     };
     fetchProduct();
   }, [id]);
+
+      // Capture referral_id from the URL and save it in Redux
+      useEffect(() => {
+        const params = new URLSearchParams(location.search); // Parse query parameters
+        const referral_id = params.get("referral_id"); // Extract referral_id from the URL
+    
+        if (referral_id) {
+          dispatch(addrefreral({ referralCode: referral_id })); // Dispatch the referral_id to Redux
+          console.log("Referral ID captured and saved:", referral_id);
+        }
+      }, [location.search, dispatch]); // Run this effect when the URL changes
+    
   const {
     register,
     handleSubmit,
@@ -86,8 +104,8 @@ CreateOder(orderdetails).then((response)=>{
     amount:data.razorpayOrder.amount, // Amount in paisa
     currency: "INR",
     name: customerData.name,
-    description: product.description,
-    image:product.images ,
+    description: product?.description|| "No description available",
+    image:product.images[0],
     callback_url:`${ import.meta.env.VITE_SERVER_URI}payment/PaymentVerification`,
     // handler: function (response){
     //     console.log("the response data we get:", response);

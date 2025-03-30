@@ -1,5 +1,5 @@
 import axios from "axios"
-import type {Logindata, Orderdata, ProductFormData, QRFormData, Signdata, UpdatePassword,formSchema} from "@/types"
+import type {Logindata, Orderdata, ProductFormData, QRFormData, Signdata, UpdatePassword} from "@/types"
 // Create an Axios instance for API requests
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URI,
