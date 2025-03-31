@@ -404,11 +404,11 @@ const GenerateSalesQR = asyncHandler(async (req, res) => {
 
    if(shopData.existing && shoplisted){
        // Generate QR code with referral link
-      const referralLink = `${process.env.FRONTEND_DOMAIN_URL}products?referral_id=${shoplisted.referralCode}`;
+      const referralLink = `${process.env.FRONTEND_DOMAIN_URL}/?referral_id=${shoplisted.referralCode}`;
 
       // const qrCodeImage = await QRCode.default.toBuffer(referralLink);
       const qrCodebase = await QRCode.toDataURL(referralLink);
-      res.status(201).json(
+      return res.status(201).json(
         new ApiResponse(201, {
           shoplisted,
           qrCode:qrCodebase,
@@ -439,11 +439,11 @@ const GenerateSalesQR = asyncHandler(async (req, res) => {
   }
 
   // Generate QR code with referral link
-  const referralLink = `${process.env.FRONTEND_DOMAIN_URL}products?referral_id=${referralCode}`;
+  const referralLink = `${process.env.FRONTEND_DOMAIN_URL}/?referral_id=${referralCode}`;
 
   // const qrCodeImage = await QRCode.default.toBuffer(referralLink);
   const qrCodebase = await QRCode.toDataURL(referralLink);
-  res.status(201).json(
+  return res.status(201).json(
     new ApiResponse(201, {
       shop,
       qrCode:qrCodebase,
