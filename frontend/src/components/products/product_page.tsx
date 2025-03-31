@@ -46,13 +46,25 @@ const ProductDetailPage: React.FC = () => {
   const location = useLocation(); // Hook to access the current URL
   const dispatch = useAppDispatch(); // Hook to dispatch actions to Redux
   console.log("the data in refreal id", referral_data);
+
+   // Capture referral_id from the URL and save it in Redux
+   useEffect(() => {
+    const params = new URLSearchParams(location.search); // Parse query parameters
+    const referral_id = params.get("referral_id"); // Extract referral_id from the URL
+
+    if (referral_id) {
+      dispatch(addrefreral({ referralCode: referral_id })); // Dispatch the referral_id to Redux
+      console.log("Referral ID captured and saved:", referral_id);
+    }
+  }, [location.search, dispatch]); // Run this effect when the URL changes
   
   useEffect(() => {
     // Fetch product data using the ID
     const fetchProduct = async () => {
       try {
         if(!id) return
-        const response = await GetProductById(id)
+        const ref = referral_data ? referral_data : ""
+        const response = await GetProductById(id,ref)
         setProduct(response.data.data);
       } catch (error) {
         console.error('Error fetching product:', error);
@@ -61,16 +73,7 @@ const ProductDetailPage: React.FC = () => {
     fetchProduct();
   }, [id]);
 
-      // Capture referral_id from the URL and save it in Redux
-      useEffect(() => {
-        const params = new URLSearchParams(location.search); // Parse query parameters
-        const referral_id = params.get("referral_id"); // Extract referral_id from the URL
-    
-        if (referral_id) {
-          dispatch(addrefreral({ referralCode: referral_id })); // Dispatch the referral_id to Redux
-          console.log("Referral ID captured and saved:", referral_id);
-        }
-      }, [location.search, dispatch]); // Run this effect when the URL changes
+
     
   const {
     register,

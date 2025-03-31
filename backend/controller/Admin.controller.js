@@ -179,11 +179,18 @@ const GetSaleProducts = asyncHandler(async (req, res) => {
 });
 
 const GetSaleProductById= asyncHandler(async (req,res)=>{
-    const { id } = req.params;
+    const { id , ref} = req.params;
     try {
         const product = await Product.findById(id);
         if(!product){
             throw new ApiError(404,"Product not found")
+        }
+        if(ref) {
+            await Shop.findOneAndUpdate(
+            { referralCode: ref },
+            { $inc: { visitors: 1 } },
+            { new: true }
+            );
         }
         return res
         .status(200)

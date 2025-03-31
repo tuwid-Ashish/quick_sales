@@ -8,6 +8,7 @@ import mongoose from "mongoose"
 import Shop from "../models/shop.model.js";
 import QRCode from "qrcode"
 import { Commission } from "../models/Commission.model.js";
+import Order from "../models/order.model.js";
 
 const options = {
   httpOnly: true,
@@ -464,8 +465,25 @@ const NumberOfSalesConvertions = asyncHandler(async (req, res) => {
 });
 
 const NumberOfReferalVisits = asyncHandler(async (req, res) => {
-    console.log("this is the referal visit function");
-})
+   const {shopName,panCard} = req.body;
+   if(!shopName||!panCard){
+    return res.status(400).json(new ApiError(400, "the field cannot be empty"));
+  }
+  const shop = await Shop.findOne({$or:[{'businessDetails.panNumber':panCard},{name:shopName}]});
+  if(!shop) {
+    return res.status(404).json(new ApiError(404, "there is no shop found."));
+  }
+  
+  const sales = await Order.find({shop:shop._id});
+  return res.status(201).json(
+    new ApiResponse(201, {
+      totalSales: sales,
+      totalVisitors: shop.vistors || 0,
+      shopName: shop.name,
+      panCard: shop.businessDetails.panNumber,
+    }, "Shop stats fetched successfully")
+  );
+});
 
 
 export {

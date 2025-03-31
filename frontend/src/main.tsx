@@ -20,6 +20,7 @@ import OrdersPage from './components/Admin/pages/OrdersPage.tsx'
 import ReferralsPage from './components/Admin/pages/ReferralsPage.tsx'
 import PaymentStatus from './components/products/checkout_page.tsx'
 import AgentsPage from './components/Admin/pages/AgentsPage.tsx'
+import ShopStats from './components/products/ShopStats.tsx'
 
 
 const router = createBrowserRouter([
@@ -38,6 +39,9 @@ const router = createBrowserRouter([
       },
       {
         path: '/payment-status', element: <PaymentStatus />
+      },
+      {
+        path: '/shop-status', element: <ShopStats />
       },
       {
         path: "/dashboard/*",

@@ -55,6 +55,10 @@ contactPerson: {
   phone: { type: String, required: true },
   email: { type: String, required: true }
 },
+ vistors: {
+  type:Number,
+
+},
 // documents: {
 //   panCard: { type: String },
 //   gstCertificate: { type: String },

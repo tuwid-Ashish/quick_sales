@@ -29,7 +29,7 @@ router.route("/avatar").patch(AuthTokenverify, upload.single("profileImage"), up
 router.route("/update-avtar").patch(AuthTokenverify, upload.single("profileImage"), updateAvatar);
 
 // Agent required routes
-router.route("/referal-vists").get(AuthTokenverify,  NumberOfReferalVisits);
+router.route("/referal-vists").get(NumberOfReferalVisits);
 router.route("/sales-convertion").get(AuthTokenverify,  NumberOfSalesConvertions);
 router.route("/generate-qr").post(AuthTokenverify,GenerateSalesQR);
 

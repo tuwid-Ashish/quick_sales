@@ -65,8 +65,8 @@ const DeleteProductById = (data: string) => {
   return apiClient.delete(`/admin/delete-product/${data}`)
 }
 
-const GetProductById = (data:string) => {
-  return apiClient.get(`/admin/get-product/${data}`)
+const GetProductById = (data:string,ref?:string) => {
+  return apiClient.get(`/admin/get-product/${data}?ref=${ref}`)
 }
 
 const ShipOrder = (data:string) => {
