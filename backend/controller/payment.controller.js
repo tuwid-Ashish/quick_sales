@@ -305,7 +305,7 @@ export const processCommission = async (commissionId) => {
       purpose: "commission_payment",
       queue_if_low_balance: true,
       reference_id: commission._id.toString(),
-      narration: `Commission for order ${commission.order}`,
+      narration: `Commission for order ${commission.transaction}`,
     });
 
     // Update commission status
