@@ -31,8 +31,8 @@ const UpdatePassword = (data:UpdatePassword) => {
 const updateAvatar = (data:string) => {
   return apiClient.post("/users/update-avatar",data)
 }
-const GeneratorQR = (data:QRFormData) => {
-  return apiClient.post("/users/generate-qr",data)
+const GeneratorQR = (data:QRFormData,exist:boolean) => {
+  return apiClient.post("/users/generate-qr",{...data,existing:exist})
 }
 
 const Saleconverstions = (data:string) => {

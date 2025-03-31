@@ -3,6 +3,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import {
@@ -53,6 +54,7 @@ commissionRate: z.string()
 
 function Generate_qr() {
 const [coordinates, setCoordinates] = useState<[number, number]>([0, 0]);
+const [existing,setExisting] = useState<boolean>(false)
 const [qrCode, setQrCode] = useState<string>("");
 
 const form = useForm<z.infer<typeof formSchema>>({
@@ -79,7 +81,7 @@ useEffect(() => {
 async function onSubmit(values: z.infer<typeof formSchema>) {
   try {
     // API call will go here
-    GeneratorQR(values).then((res)=>{
+    GeneratorQR(values,existing).then((res)=>{
       console.log("this is what we get:",res.data);
       
       setQrCode(res.data.data.qrCode)
@@ -272,14 +274,19 @@ return (
               name="businessDetails.gstNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>GST Number (Optional)</FormLabel>
+                  <FormLabel>GST Number</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
+                
               )}
             />
+            <div className="flex items-center space-x-2 p-4 border rounded-lg shadow-sm">
+      <Checkbox checked={existing} onCheckedChange={setExisting} />
+      <label className="text-sm font-medium">Gener register shop qrCode </label>
+    </div>
           </div>
 
           <div className="space-y-4">

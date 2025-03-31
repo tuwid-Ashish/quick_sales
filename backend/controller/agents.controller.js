@@ -401,7 +401,21 @@ const GenerateSalesQR = asyncHandler(async (req, res) => {
   
   // check this shop is unique and not duplicate
    const shoplisted = await Shop.findOne({$or:[{"bankDetails.accountNumber": shopData.bankDetails.accountNumber},{"businessDetails.panNumber": shopData.businessDetails.panNumber}]}) 
-   
+
+   if(shopData.existing && shoplisted){
+       // Generate QR code with referral link
+      const referralLink = `${process.env.FRONTEND_DOMAIN_URL}products?referral_id=${shoplisted.referralCode}`;
+
+      // const qrCodeImage = await QRCode.default.toBuffer(referralLink);
+      const qrCodebase = await QRCode.toDataURL(referralLink);
+      res.status(201).json(
+        new ApiResponse(201, {
+          shoplisted,
+          qrCode:qrCodebase,
+          referralLink
+        }, "Shop created successfully with QR code")
+      );
+   }
    if(shoplisted){
       return res.status(401).json(new ApiError(401,"the bank account and pan card is already registered."))
    }
@@ -425,7 +439,7 @@ const GenerateSalesQR = asyncHandler(async (req, res) => {
   }
 
   // Generate QR code with referral link
-  const referralLink = `${process.env.FRONTEND_DOMAIN_URL}products?ref=${referralCode}`;
+  const referralLink = `${process.env.FRONTEND_DOMAIN_URL}products?referral_id=${referralCode}`;
 
   // const qrCodeImage = await QRCode.default.toBuffer(referralLink);
   const qrCodebase = await QRCode.toDataURL(referralLink);
