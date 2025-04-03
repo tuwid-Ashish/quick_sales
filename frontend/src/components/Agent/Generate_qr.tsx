@@ -284,7 +284,7 @@ return (
               )}
             />
             <div className="flex items-center space-x-2 p-4 border rounded-lg shadow-sm">
-      <Checkbox checked={existing} onCheckedChange={setExisting} />
+      <Checkbox checked={existing} onCheckedChange={(checked) => setExisting(checked === true)} />
       <label className="text-sm font-medium">Gener register shop qrCode </label>
     </div>
           </div>

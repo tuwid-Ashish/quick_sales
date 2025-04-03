@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { ProductFormData } from "@/types";
+import { ProductFormData, ProductImage } from "@/types";
 import { AddProduct, EditProduct, GetProductById } from "@/api";
 import {OctagonX} from "lucide-react"
 // Validation Schema using zod for form fields (excluding images)
@@ -48,6 +48,8 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
   const [open, setOpen] = useState(false);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [images, setImages] = useState<ProductImage[]>([]);
+  const MAX_IMAGES = 4;
 
   // Add state for product data
   // const [product, setProduct] = useState<ProductFormData | null>(null);
@@ -70,8 +72,13 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
             stock: productData.stock,
           });
           // Set images
-          setSelectedImages([]); // Reset existing images
-          setPreviewImages(productData.images); // Set existing image URLs
+          // Convert existing images to ProductImage format
+          const existingImages: ProductImage[] = productData.images.map((url: string) => ({
+            id: crypto.randomUUID(),
+            url,
+            isExisting: true
+          }));
+          setImages(existingImages);
         })
         .catch((error) => {
           console.error("Error fetching product:", error);
@@ -79,32 +86,47 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
     }
   }, [productId]);
 
+  // Cleanup URLs on unmount
+  useEffect(() => {
+    return () => {
+      images.forEach(image => {
+        if (!image.isExisting) {
+          URL.revokeObjectURL(image.url);
+        }
+      });
+    };
+  }, []);
+
   // Allow multiple file selection but limit to 4 images
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;   
-    if (files) {
-      const fileArray = Array.from(files);
-      console.log(fileArray);
-      
-      if(selectedImages.length>4){
-        alert("only add max 4 images")
-        return
-      }
-      setSelectedImages((prevFiles) => {
-        const newFiles = [...fileArray, ...prevFiles];
-        const previews = newFiles.map((file) => URL.createObjectURL(file));
-        setPreviewImages(previews);
-        console.log("the data of this method:",URL.createObjectURL(newFiles[0]),previews);
-        
-        return newFiles;
-      });
-    } 
+    const files = event.target.files; 
+    if (!files) return;
+
+    const remainingSlots = MAX_IMAGES - images.length;
+    if (remainingSlots <= 0) {
+      alert(`Maximum ${MAX_IMAGES} images allowed`);
+      return;
+    }
+    const newFiles = Array.from(files).slice(0, remainingSlots);
+    
+    const newImages: ProductImage[] = newFiles.map(file => ({
+      id: crypto.randomUUID(),
+      url: URL.createObjectURL(file),
+      file,
+      isExisting: false
+    }));
+
+    setImages(prev => [...prev, ...newImages]);  
+  }
+
+  // Update handleRemoveFile to handle both types of images
+   const handleRemoveFile = (imageToRemove: ProductImage) => {
+    if (!imageToRemove.isExisting) {
+      URL.revokeObjectURL(imageToRemove.url);
+    }
+    setImages(prev => prev.filter(img => img.id !== imageToRemove.id));
   };
-  const handleRemoveFile = (index: number): void => {
-    console.log("the reomve method is called");
-    setSelectedImages((prevFiles) => prevFiles.filter((_, i) => i !== index));
-    setPreviewImages((prev => prev.filter((_, i) => i !== index)))
-  };
+
   const onSubmit: SubmitHandler<ProductFormInput> = (data) => {
     // Create a FormData object for file upload
     const formData = new FormData();
@@ -118,24 +140,17 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
       formData.append("id", productId);
     }
 
-    // Append each selected file under the key "images"
-    selectedImages.forEach((file) => {
+    // Handle images
+    const existingImages = images.filter(img => img.isExisting).map(img => img.url);
+    const newFiles = images.filter(img => !img.isExisting).map(img => img.file!);
+
+    newFiles.forEach(file => {
       formData.append("images", file);
     });
 
-     // If editing, include existing images that weren't removed
-     console.log(`the data of each privew url`,previewImages);
-
-
-     if (isEditing && previewImages.length > 0) {
-      previewImages.forEach((url) => {
-        console.log(`the data of each privew url`,url);
-        
-        if(url.includes("res.cloudinary.com")){
-          formData.append("existingImages", url);
-        }
-      });
-    }
+    existingImages.forEach(url => {
+      formData.append("existingImages", url);
+    });
 
     const productData: ProductFormData = {
       name: formData.get("name") as string,
@@ -215,41 +230,24 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
           multiple
           onChange={handleFileChange}
           className="mb-2" />
-          {previewImages.length > 0 && (
+          {images.length > 0 && (
                 <div className="flex gap-2 mt-2">
-                  {previewImages.map((src, idx) => (
-                   <div key={idx} className="relative">
+                  {images.map((img) => (
+                   <div key={img.id} className="relative">
                    <OctagonX 
                      className="absolute -right-2 -top-2 z-10 cursor-pointer text-red-500 bg-white rounded-full" 
                      size={20}
-                     onClick={() => handleRemoveFile(idx)}
+                     onClick={() => handleRemoveFile(img)}
                    />
                    <img
-                    src={src}
-                    alt={`Preview ${idx + 1}`}
+                    src={img.url}
+                    alt="Product preview"
                     className="h-24 w-24 object-cover rounded"
                     />
                    </div>
                   ))}
                 </div>
                 )}
-          {/* <ul className="mb-2">
-          {selectedImages.map((file, index) => (
-            <li
-              key={index}
-              className="flex justify-between items-center bg-white p-2 rounded mb-1"
-            >
-              <span className="text-sm">{file.name}</span>
-              <button
-                type="button"
-                // onClick={() => handleRemoveFile(index)}
-                className="text-red-500 text-sm"
-              >
-                Remove
-              </button>
-            </li>
-          ))}
-        </ul> */}
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel

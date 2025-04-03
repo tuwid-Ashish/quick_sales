@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAppDispatch, useAppSelector } from "@/Store/Store";
 import { addrefreral } from "@/Store/ReferalSlice";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 // Define types for Product and Customer
 interface RazorpayOptions {
@@ -66,6 +67,8 @@ const ProductDetailPage: React.FC = () => {
         const ref = referral_data ? referral_data : ""
         const response = await GetProductById(id,ref)
         setProduct(response.data.data);
+        console.log("the data :" ,response.data.data.images);
+        
       } catch (error) {
         console.error('Error fetching product:', error);
       }
@@ -107,7 +110,7 @@ CreateOder(orderdetails).then((response)=>{
     amount:data.razorpayOrder.amount, // Amount in paisa
     currency: "INR",
     name: customerData.name,
-    description: product?.description|| "No description available",
+    description: (product?.description || "No description available").substring(0, 255),
     image:product.images[0],
     callback_url:`${ import.meta.env.VITE_SERVER_URI}payment/PaymentVerification`,
     // handler: function (response){
@@ -139,67 +142,121 @@ CreateOder(orderdetails).then((response)=>{
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      {/* Product Images */}
-      <div className="grid grid-cols-2 gap-4">
-        {product?.images.map((img, index) => (
-          <img key={index} src={img} alt={product?.name} className="rounded-lg" />
-        ))}
-      </div>
+    <div className="max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Product Image Carousel */}
+      <Carousel className="w-full max-w-lg">
+        <CarouselContent>
+          {product?.images.map((img, index) => (
+            <CarouselItem key={index}>
+              <img src={img} alt={product?.name} className="rounded-lg w-full" />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        {/* <CarouselPrevious />
+        <CarouselNext /> */}
+      </Carousel>
 
       {/* Product Details */}
-      <h1 className="text-3xl font-bold mt-4">{product?.name}</h1>
-      <p className="text-gray-600 mt-2">{product?.description}</p>
-      <p className="text-2xl font-semibold text-blue-600 mt-4">₹{product?.price}</p>
+      <div>
+        <h1 className="text-3xl font-bold">{product?.name}</h1>
+        <p className="text-gray-600 mt-2">{product?.description}</p>
+        <p className="text-2xl font-semibold text-blue-600 mt-4">₹{product?.price}</p>
 
-      {/* Buy Now Button (Opens Checkout Form) */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogTrigger asChild>
-          <Button className="mt-4 w-full">Buy Now</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <h2 className="text-xl font-semibold mb-2">Enter Your Details</h2>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-            <div>
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" {...register("name", { required: "Name is required" })} />
-              {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
-            </div>
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email" },
-                })}
-              />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-            </div>
-            <div>
-              <Label htmlFor="phone">Phone</Label>
-              <Input
-                id="phone"
-                {...register("phone", {
-                  required: "Phone number is required",
-                  pattern: { value: /^[0-9]{10}$/, message: "Enter a valid 10-digit phone number" },
-                })}
-              />
-              {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
-            </div>
-            <div>
-              <Label htmlFor="address">Address</Label>
-              <Input id="address" {...register("address", { required: "Address is required" })} />
-              {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
-            </div>
-            <Button type="submit" className="mt-4 w-full">
-              Proceed to Pay
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
+        {/* Buy Now Button */}
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="mt-4 w-full">Buy Now</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <h2 className="text-xl font-semibold mb-2">Enter Your Details</h2>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+              <div>
+                <Label htmlFor="name">Name</Label>
+                <Input id="name" {...register("name", { required: "Name is required" })} />
+                {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email" },
+                  })}
+                />
+                {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="phone">Phone</Label>
+                <Input
+                  id="phone"
+                  {...register("phone", {
+                    required: "Phone number is required",
+                    pattern: { value: /^[0-9]{10}$/, message: "Enter a valid 10-digit phone number" },
+                  })}
+                />
+                {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="address">Address</Label>
+                <Input id="address" {...register("address", { required: "Address is required" })} />
+                {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
+              </div>
+              <Button type="submit" className="mt-4 w-full">Proceed to Pay</Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 };
 
 export default ProductDetailPage;
+
+
+   {/* Buy Now Button (Opens Checkout Form) */}
+//    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+//    <DialogTrigger asChild>
+//      <Button className="mt-4 w-full">Buy Now</Button>
+//    </DialogTrigger>
+//    <DialogContent>
+//      <h2 className="text-xl font-semibold mb-2">Enter Your Details</h2>
+//      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+//        <div>
+//          <Label htmlFor="name">Name</Label>
+//          <Input id="name" {...register("name", { required: "Name is required" })} />
+//          {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+//        </div>
+//        <div>
+//          <Label htmlFor="email">Email</Label>
+//          <Input
+//            id="email"
+//            {...register("email", {
+//              required: "Email is required",
+//              pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email" },
+//            })}
+//          />
+//          {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+//        </div>
+//        <div>
+//          <Label htmlFor="phone">Phone</Label>
+//          <Input
+//            id="phone"
+//            {...register("phone", {
+//              required: "Phone number is required",
+//              pattern: { value: /^[0-9]{10}$/, message: "Enter a valid 10-digit phone number" },
+//            })}
+//          />
+//          {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
+//        </div>
+//        <div>
+//          <Label htmlFor="address">Address</Label>
+//          <Input id="address" {...register("address", { required: "Address is required" })} />
+//          {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
+//        </div>
+//        <Button type="submit" className="mt-4 w-full">
+//          Proceed to Pay
+//        </Button>
+//      </form>
+//    </DialogContent>
+//  </Dialog>

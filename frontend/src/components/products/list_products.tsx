@@ -74,7 +74,9 @@ const ProductsPage = () => {
             </CardHeader>
             <CardContent className="p-4">
               <CardTitle className="text-xl font-semibold">{product.name}</CardTitle>
-              <p className="text-gray-500 mt-2">{product.description}</p>
+              <p className="text-gray-500 mt-2"> {product.description && product.description.length > 80
+    ? `${product.description.slice(0, 80)}...`
+    : product.description}</p>
               <div className="flex justify-between items-center mt-4">
                 <span className="text-lg font-bold">₹{product.price}</span>
                 <Button

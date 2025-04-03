@@ -84,6 +84,13 @@ export interface QRFormData {
   commissionRate: number;
 }
 
+export interface ProductImage {
+  id: string;
+  url: string;
+  file?: File;
+  isExisting: boolean;
+}
+
 // import {z} from ""
 export const formSchema = z.object({
 name: z.string().min(2),
