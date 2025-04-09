@@ -50,7 +50,7 @@ const orderSchema = new Schema({
     type:Boolean,
     default:false,
   }
-});
+},{timestamps:true});
 
 const Order = model("Order", orderSchema);
 export default Order;

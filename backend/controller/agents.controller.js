@@ -396,61 +396,125 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, UserPage[0], "the user page has been fetched"));
 });
 
-const GenerateSalesQR = asyncHandler(async (req, res) => {
-  const shopData = req.body;
-  console.log("the get uo:",shopData);
+
+const GenerateSalesExistingQR = asyncHandler(async(req,res)=>{
+  const {panNumber,accountNumber} = req.body
+
+  if (!accountNumber || !panNumber) {
+    throw new ApiError(400, "Missing required shop details");
+  }
+
+  const shoplisted = await Shop.findOne({
+    $or: [
+      { "bankDetails.accountNumber": accountNumber },
+      { "businessDetails.panNumber": panNumber }
+    ]
+  }).select('referralCode name businessDetails.panNumber').lean();
+
+  if (!shoplisted) {
+    throw new ApiError(404, "No existing shop found with these details");
+  }
+
+  try {
+    const referralLink = new URL(`/?referral_id=${shoplisted.referralCode}`, 
+      process.env.FRONTEND_DOMAIN_URL).toString();
+    
+    const qrCodebase = await QRCode.toDataURL(referralLink, {
+      errorCorrectionLevel: 'H',
+      margin: 2,
+      width: 300
+    });
+
+    return res.status(200).json(
+      new ApiResponse(200, {
+        shop: shoplisted,
+        qrCode: qrCodebase,
+        referralLink
+      }, "Existing shop QR code generated successfully")
+    );
+  } catch (error) {
+    throw new ApiError(500, "Error generating QR code for existing shop");
+  }
   
-  // check this shop is unique and not duplicate
-   const shoplisted = await Shop.findOne({$or:[{"bankDetails.accountNumber": shopData.bankDetails.accountNumber},{"businessDetails.panNumber": shopData.businessDetails.panNumber}]}) 
+})
 
-   if(shopData.existing && shoplisted){
-       // Generate QR code with referral link
-      const referralLink = `${process.env.FRONTEND_DOMAIN_URL}/?referral_id=${shoplisted.referralCode}`;
+const GenerateSalesQR = asyncHandler(async (req, res) => {
+  // 1. Input Validation
+  const shopData = req.body;
+  if (!shopData?.bankDetails?.accountNumber || !shopData?.businessDetails?.panNumber) {
+    throw new ApiError(400, "Missing required shop details");
+  }
 
-      // const qrCodeImage = await QRCode.default.toBuffer(referralLink);
-      const qrCodebase = await QRCode.toDataURL(referralLink);
-      return res.status(201).json(
-        new ApiResponse(201, {
-          shoplisted,
-          qrCode:qrCodebase,
-          referralLink
-        }, "Shop created successfully with QR code")
-      );
-   }
-   if(shoplisted){
-      return res.status(401).json(new ApiError(401,"the bank account and pan card is already registered."))
-   }
+  // 2. Sanitize and Format Input
+  const accountNumber = String(shopData.bankDetails.accountNumber).trim();
+  const panNumber = String(shopData.businessDetails.panNumber).trim().toUpperCase();
 
-  // Generate a unique referral code (alphanumeric, 8 characters)
-  const referralCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+  // 3. Check for Existing Shop with Better Query
+  const shoplisted = await Shop.findOne({
+    $or: [
+      { "bankDetails.accountNumber": accountNumber },
+      { "businessDetails.panNumber": panNumber }
+    ]
+  }).select('referralCode name businessDetails.panNumber').lean();
 
-  // Add referral code to shop data
+  // 4. Handle Duplicate Shop Case
+  if (shoplisted) {
+    throw new ApiError(409, "Shop with this bank account or PAN already exists");
+  }
+
+  // 5. Generate Secure Referral Code
+  const referralCode = Array.from(crypto.getRandomValues(new Uint8Array(6)))
+    .map(byte => byte.toString(16).padStart(2, '0'))
+    .join('')
+    .toUpperCase();
+
+  // 6. Create New Shop with Validation
   const shopWithReferral = {
     ...shopData,
     referralCode,
     status: 'pending',
-    agent: req.user._id
+    agent: req.user._id,
+    createdAt: new Date(),
+    bankDetails: {
+      ...shopData.bankDetails,
+      accountNumber: accountNumber
+    },
+    businessDetails: {
+      ...shopData.businessDetails,
+      panNumber: panNumber
+    }
   };
 
-  // Create new shop
-  const shop = await Shop.create(shopWithReferral);
-
-  if (!shop) {
-    return res.status(401).json(new ApiError(500, "Failed to create shop"));
+  let shop;
+  try {
+    shop = await Shop.create(shopWithReferral);
+  } catch (error) {
+    throw new ApiError(500, "Failed to create shop: " + error.message);
   }
 
-  // Generate QR code with referral link
-  const referralLink = `${process.env.FRONTEND_DOMAIN_URL}/?referral_id=${referralCode}`;
+  // 7. Generate QR Code with Error Handling
+  try {
+    const referralLink = new URL(`/?referral_id=${referralCode}`, 
+      process.env.FRONTEND_DOMAIN_URL).toString();
 
-  // const qrCodeImage = await QRCode.default.toBuffer(referralLink);
-  const qrCodebase = await QRCode.toDataURL(referralLink);
-  return res.status(201).json(
-    new ApiResponse(201, {
-      shop,
-      qrCode:qrCodebase,
-      referralLink
-    }, "Shop created successfully with QR code")
-  );
+    const qrCodebase = await QRCode.toDataURL(referralLink, {
+      errorCorrectionLevel: 'H',
+      margin: 2,
+      width: 300
+    });
+
+    return res.status(201).json(
+      new ApiResponse(201, {
+        shop,
+        qrCode: qrCodebase,
+        referralLink
+      }, "New shop created with QR code successfully")
+    );
+  } catch (error) {
+    // Cleanup if QR generation fails
+    await Shop.findByIdAndDelete(shop._id);
+    throw new ApiError(500, "Error generating QR code for new shop");
+  }
 });
 
 const NumberOfSalesConvertions = asyncHandler(async (req, res) => {
@@ -499,6 +563,7 @@ export {
   getUserChannelProfile,
   GenerateSalesQR,
   NumberOfSalesConvertions,
-  NumberOfReferalVisits
+  NumberOfReferalVisits,
+  GenerateSalesExistingQR
 
 };

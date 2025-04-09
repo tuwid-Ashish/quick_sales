@@ -27,7 +27,7 @@ const productSchema = zod.object({
 type ProductFormInput = zod.infer<typeof productSchema>;
 
 interface AddProductFormProps {
-  onAddProduct: (product: ProductFormData) => void;
+  onAddProduct: () => void;
   productId?: string; // Add this prop
   isEditing?: boolean; // Add this to control form behavior
 }
@@ -46,8 +46,6 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
   });
 
   const [open, setOpen] = useState(false);
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [images, setImages] = useState<ProductImage[]>([]);
   const MAX_IMAGES = 4;
 
@@ -174,15 +172,11 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
       .then((response) => {
         // Construct complete product data (including images URLs if needed)
         // Here, for onAddProduct you can merge form input with extra data
-        onAddProduct({
-          ...data, images: previewImages,
-          _id: ""
-        });
+        onAddProduct();
         console.log("The response is:", response);
         setOpen(false);
         reset();
-        setPreviewImages([]);
-        setSelectedImages([]);
+        setImages([]);
       })
       .catch((error) => {
         console.error("Error adding product:", error);
@@ -252,7 +246,7 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit">Add Product</Button>
+            <Button type="submit">{ isEditing ?"Update Product":"Add Product"}</Button>
           </div>
         </form>
       </DialogContent>

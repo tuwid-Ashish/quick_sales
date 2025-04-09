@@ -87,7 +87,7 @@ const PaymentStatus = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-6">
                                 <div>
                                     <p className="text-sm text-muted-foreground">Order ID</p>
                                     <p className="font-medium">{order._id}</p>
@@ -95,7 +95,7 @@ const PaymentStatus = () => {
                                 <div>
                                     <p className="text-sm text-muted-foreground">Order Date</p>
                                     <p className="font-medium">
-                                        {new Date(order.orderDate).toLocaleDateString()}
+                                        {order.orderDate}
                                     </p>
                                 </div>
                             </div>

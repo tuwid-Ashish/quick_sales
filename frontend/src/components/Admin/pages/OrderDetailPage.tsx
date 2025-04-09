@@ -24,10 +24,11 @@ interface OrderDetail {
             price: number;
             images: string[];
         };
+        priceAtPurchase: number;
         quantity: number;
     }>;
     totalAmount: number;
-    status: string;
+    paymentStatus: string;
     shippingAddress: string; 
     // {
     //     street: string;
@@ -35,7 +36,7 @@ interface OrderDetail {
     //     state: string;
     //     zipCode: string;
     // };
-    createdAt: string;
+    orderDate: string;
 }
 
 function OrderDetailPage({ orderId, isOpen, onClose }: OrderDetailPageProps) {
@@ -90,9 +91,9 @@ function OrderDetailPage({ orderId, isOpen, onClose }: OrderDetailPageProps) {
                     <CardContent className="p-4">
                         <h3 className="text-lg font-semibold mb-2">Order Summary</h3>
                         <div className="space-y-2">
-                        <p>Status: <span className="capitalize">{orderData.status}</span></p>
-                        <p>Order Date: {orderData.createdAt}</p>
-                        <p>Total Amount: ${orderData.totalAmount.toFixed(2)}</p>
+                        <p>Status: <span className="capitalize">{orderData.paymentStatus}</span></p>
+                        <p>Order Date: {orderData.orderDate}</p>
+                        <p>Total Amount: ₹{orderData.totalAmount.toFixed(2)}</p>
                         </div>
                     </CardContent>
                     </Card>
@@ -106,13 +107,14 @@ function OrderDetailPage({ orderId, isOpen, onClose }: OrderDetailPageProps) {
                 </div>
 
                 {/* Products in second column */}
-                <Card className="h-full">
+                {orderData.products?(
+                    <Card className="h-full">
                     <CardContent className="p-4">
                     <h3 className="text-lg font-semibold mb-2">Products</h3>
                     <div className="space-y-4">
                         {orderData.products.map((item, index) => (
                         <div key={index} className="flex items-start gap-4 border-b pb-4 last:border-b-0">
-                            {item.product.images && item.product.images.length > 0 && (
+                            {item.product != null && item.product.images.length > 0 && (
                             <img
                                 src={item.product.images[0]}
                                 alt={item.product.name}
@@ -120,10 +122,10 @@ function OrderDetailPage({ orderId, isOpen, onClose }: OrderDetailPageProps) {
                             />
                             )}
                             <div className="flex-1">
-                            <p className="font-medium">{item.product.name}</p>
+                            <p className={`font-medium ${!item.product && 'text-red-400'}`}>{item.product?item.product.name: "the product has been deleted"}</p>
                             <p className="text-sm text-gray-600 mt-1">Quantity: {item.quantity}</p>
                             <p className="text-sm font-medium mt-1">
-                                Price: ${(item.product.price * item.quantity).toFixed(2)}
+                                Price: ₹{(item.priceAtPurchase * item.quantity).toFixed(2)}
                             </p>
                             </div>
                         </div>
@@ -132,11 +134,26 @@ function OrderDetailPage({ orderId, isOpen, onClose }: OrderDetailPageProps) {
                     <Separator className="my-4" />
                     <div className="flex justify-end">
                         <p className="font-semibold">
-                        Total: ${orderData.totalAmount.toFixed(2)}
+                        Total: ₹{orderData.totalAmount.toFixed(2)}
                         </p>
                     </div>
                     </CardContent>
-                </Card>
+                </Card>): (
+                   <Card className="h-full">
+                   <CardContent className="p-4">
+                   <h3 className="text-lg font-semibold mb-2">Products</h3>
+                   <div className="space-y-4">
+                     the product has been deleted
+                   </div>
+                   <Separator className="my-4" />
+                   <div className="flex justify-end">
+                       <p className="font-semibold">
+                       Total: ₹{orderData.totalAmount.toFixed(2)}
+                       </p>
+                   </div>
+                   </CardContent>
+               </Card>
+                ) }
                 
                 </div>
             )}

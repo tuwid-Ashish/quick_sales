@@ -24,6 +24,8 @@ interface OrderDetail {
             price: number;
             images: string[];
         };
+        priceAtPurchase: number;
+        name: string;
         quantity: number;
     }>;
     paymentStatus:string;
@@ -103,12 +105,12 @@ const InvoiceGenerator = ({ isOpen, onClose, orderId }:OrderDetailPageProps) => 
                         </div>
                         <div className="text-right">
                             <p className="font-bold">Invoice #: {orderData?._id}</p>
-                            <p>Date: {orderData?.orderDate ? new Date(orderData.orderDate).toLocaleDateString() : "N/A"}</p>
+                            <p>Date: {orderData?.orderDate}</p>
                         </div>
                     </div>
 
                     {/* Bill To Section */}
-                    <div className="grid grid-cols-2 gap-8 mb-8">
+                    <div className="grid grid-cols-2 gap-10 mb-8">
                         <div>
                             <h2 className="text-lg font-semibold mb-2">Bill To:</h2>
                             <p>{orderData?.customer?.name}</p>
@@ -136,13 +138,13 @@ const InvoiceGenerator = ({ isOpen, onClose, orderId }:OrderDetailPageProps) => 
                         <tbody>
                             {orderData?.products?.map((item, index) => (
                                 <tr key={index} className="border-b border-gray-200">
-                                    <td className="py-2">{item.product.name}</td>
+                                    <td className="py-2">{item.name}</td>
                                     <td className="text-right py-2">{item.quantity}</td>
                                     <td className="text-right py-2">
-                                    ₹{item.product.price.toFixed(2)}
+                                    ₹{item.priceAtPurchase.toFixed(2)}
                                     </td>
                                     <td className="text-right py-2">
-                                    ₹{(item.product.price * item.quantity).toFixed(2)}
+                                    ₹{(item.priceAtPurchase * item.quantity).toFixed(2)}
                                     </td>
                                 </tr>
                             ))}

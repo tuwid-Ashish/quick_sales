@@ -93,7 +93,7 @@ export default function ProductsPage() {
             <CardContent className="p-4 flex-grow">
               <h3 className="text-lg font-semibold">{product.name}</h3>
               <p className="text-sm text-gray-600">{product.description}</p>
-              <p className="text-sm font-semibold mt-2">Price: ${product.price}</p>
+              <p className="text-sm font-semibold mt-2">Price: ₹{product.price}</p>
               <p className="text-sm">Stock: {product.stock}</p>
             </CardContent>
 

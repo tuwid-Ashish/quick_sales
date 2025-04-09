@@ -409,8 +409,22 @@ const GetOrderById = asyncHandler(async (req,res)=>{
             .populate('shop', 'fullname email phone')
         if(!order){
             throw new ApiError(404,"Order not found")
-        }   
-        return res.status(200).json(new ApiResponse(200,order))
+        }  
+         // Format the date before sending response
+         const formattedOrder = {
+            ...order.toObject(),
+            orderDate: new Intl.DateTimeFormat('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+                timeZone: 'Asia/Kolkata' // Use Indian timezone
+            }).format(new Date(order.orderDate))
+        };
+
+        return res.status(200).json(new ApiResponse(200, formattedOrder));
 
     } catch (error) {
         throw new ApiError(400,error)

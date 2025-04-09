@@ -129,7 +129,7 @@ export const CreateOrder = async (req, res) => {
 export const CapturePayment = async (req, res) => {
   try {
     const instance = CreateRazerpayInstance();
-    console.log("the object we setup mann :", req, req.body);
+    console.log("the object we setup mann :", req.body);
 
     const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
       req.body;
@@ -146,18 +146,19 @@ export const CapturePayment = async (req, res) => {
       .createHmac("sha256", RAZERPAY_KEY_SECRET)
       .update(`${razorpay_order_id}|${razorpay_payment_id}`)
       .digest("hex");
+      
+    const razorpay_order_details = await instance.orders.fetch(
+      razorpay_order_id
+    );
 
     if (generated_signature !== razorpay_signature) {
       return res
         .status(400)
         .rediect(
-          `${DOMAIN_URL}/payment-status?status=failed&order_id=${razorpay_order_id}`
+          `${DOMAIN_URL}/payment-status?status=failed&order_id=${razorpay_order_details.receipt}`
         );
     }
 
-    const razorpay_order_details = await instance.orders.fetch(
-      razorpay_order_id
-    );
     const razorpay_payment_details = await instance.payments.fetch(
       razorpay_payment_id
     );
@@ -224,6 +225,7 @@ export const CapturePayment = async (req, res) => {
       if (shop) {
         const commissionAmount =
           (updatedOrder.totalAmount * shop.commissionRate) / 100;
+
         // Check if Razorpay contact/fund account exists for this shop (referral)
         let contact = await fetchContactByRefrenceId(shop._id.toString());
         if (!contact) {
@@ -263,8 +265,12 @@ export const CapturePayment = async (req, res) => {
     );
   } catch (error) {
     console.error("Payment capture error:", error);
+    const { razorpay_order_id} = req.body;
+    const razorpay_order_details = await instance.orders.fetch(
+        razorpay_order_id
+      );  
     return res.redirect(
-      `${DOMAIN_URL}/payment-status?status=failed&order_id=${"null"}`
+      `${DOMAIN_URL}/payment-status?status=failed&order_id=${razorpay_order_details?.receipt|| "null"}`
     );
   }
 };

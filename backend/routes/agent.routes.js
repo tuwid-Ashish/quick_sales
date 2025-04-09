@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  GenerateSalesExistingQR,
   GenerateSalesQR,
   GetCurrentUser,
   LogoutUser,
@@ -32,5 +33,6 @@ router.route("/update-avtar").patch(AuthTokenverify, upload.single("profileImage
 router.route("/referal-vists").get(NumberOfReferalVisits);
 router.route("/sales-convertion").get(AuthTokenverify,  NumberOfSalesConvertions);
 router.route("/generate-qr").post(AuthTokenverify,GenerateSalesQR);
+router.route("/regenerate-qr").post(AuthTokenverify,GenerateSalesExistingQR);
 
 export default router;

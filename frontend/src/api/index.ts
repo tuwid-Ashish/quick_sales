@@ -31,8 +31,11 @@ const UpdatePassword = (data:UpdatePassword) => {
 const updateAvatar = (data:string) => {
   return apiClient.post("/users/update-avatar",data)
 }
-const GeneratorQR = (data:QRFormData,exist:boolean) => {
+const GeneratorQR = (data:QRFormData,exist:boolean= false) => {
   return apiClient.post("/users/generate-qr",{...data,existing:exist})
+}
+const GeneratorExistingQR = (data:{panNumber:string,accountNumber:string}) => {
+  return apiClient.post("/users/regenerate-qr",data)
 }
 
 const Saleconverstions = (data:string) => {
@@ -130,5 +133,6 @@ export {
   CreateOder,
   ShipOrder,
   GetShopById,
-  EditShop
+  EditShop,
+  GeneratorExistingQR
 }
