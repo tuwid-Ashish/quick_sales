@@ -24,6 +24,9 @@ app.use(express.urlencoded({ extended: true }))
 app.get("/",(req,res)=>{
     res.send("hello moto")
 })
+app.get("/correct",(req,res)=>{
+    res.send("inner look chaye.")
+})
 
 // router import
 import UserRouter from "./routes/agent.routes.js"
