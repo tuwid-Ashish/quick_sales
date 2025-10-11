@@ -112,7 +112,7 @@ CreateOder(orderdetails).then((response)=>{
     name: customerData.name,
     description: (product?.description || "No description available").substring(0, 255),
     image:product.images[0],
-    callback_url:`${ import.meta.env.VITE_SERVER_URI}payment/PaymentVerification`,
+    callback_url:`${ import.meta.env.VITE_SERVER_URI}/payment/PaymentVerification`,
     // handler: function (response){
     //     console.log("the response data we get:", response);
         
