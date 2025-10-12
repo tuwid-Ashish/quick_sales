@@ -80,7 +80,7 @@ export default function ReferralsPage() {
   const handleApproveCommission = async (id: string) => {
     try {
       await axios.post(
-        `${import.meta.env.VITE_SERVER_URI}admin/approve-commission/${id}`,
+        `${import.meta.env.VITE_SERVER_URI}/admin/approve-commission/${id}`,
         {},
         { withCredentials: true }
       );
@@ -99,7 +99,7 @@ export default function ReferralsPage() {
   const handleRejectCommission = async (id: string) => {
     try {
       await axios.post(
-        `${import.meta.env.VITE_SERVER_URI}admin/reject-commission/${id}`,
+        `${import.meta.env.VITE_SERVER_URI}/admin/reject-commission/${id}`,
         {},
         { withCredentials: true }
       );
@@ -121,7 +121,7 @@ export default function ReferralsPage() {
       console.log(dateFilter);
       
       const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URI}admin/list-referrals`,
+        `${import.meta.env.VITE_SERVER_URI}/admin/list-referrals`,
         {
           params: {
             page: currentPage,

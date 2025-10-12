@@ -84,7 +84,7 @@ export default function AgentsPage() {
             });
 
             const response = await axios.get(
-                `${import.meta.env.VITE_SERVER_URI}admin/shop-list?${queryParams}`,
+                `${import.meta.env.VITE_SERVER_URI}/admin/shop-list?${queryParams}`,
                 { withCredentials: true }
             );
 
