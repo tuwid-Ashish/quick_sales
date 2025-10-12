@@ -56,7 +56,7 @@ export default function OrdersPage() {
     const fetchOrders = async () => {
         setLoading(true);
         try {
-            const { data } = await axios.get(`${import.meta.env.VITE_SERVER_URI}admin/get-orders`, {
+            const { data } = await axios.get(`${import.meta.env.VITE_SERVER_URI}/admin/get-orders`, {
                 params: { page: currentPage, limit: 5, customerName: searchQuery, paymentStatus, orderDate },
                 withCredentials:true
             });
