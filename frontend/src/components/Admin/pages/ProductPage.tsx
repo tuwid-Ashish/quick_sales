@@ -6,7 +6,7 @@ import AddProductForm from "./AddProductForm";
 import { ProductFormData } from "@/types";
 import { GetProducts, DeleteProductById } from "@/api";
 import { useAppSelector } from "@/Store/Store";
-import { Package, Edit, Trash2, Plus } from "lucide-react";
+import { Package, Trash2 } from "lucide-react";
 
 interface ProductsPageState {
   products: ProductFormData[];
