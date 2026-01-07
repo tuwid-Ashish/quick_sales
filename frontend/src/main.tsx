@@ -21,6 +21,7 @@ import ReferralsPage from './components/Admin/pages/ReferralsPage.tsx'
 import PaymentStatus from './components/products/checkout_page.tsx'
 import AgentsPage from './components/Admin/pages/AgentsPage.tsx'
 import ShopStats from './components/products/ShopStats.tsx'
+import HomePage from './components/Home/HomePage.tsx'
 
 
 const router = createBrowserRouter([
@@ -29,7 +30,10 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: '/', element: <ProductsPage />
+        path: '/', element: <HomePage />
+      },
+      {
+        path: '/products', element: <ProductsPage />
       },
       {
         path: '/products/:id', element: <ProductDetails />

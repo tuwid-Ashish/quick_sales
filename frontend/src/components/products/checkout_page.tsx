@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { GetOrderDetails } from '@/api';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CheckCircle2, XCircle, Clock, Package } from "lucide-react";
+// import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CheckCircle2, XCircle, Package, MapPin, User, Mail, Phone, Calendar, CreditCard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -47,104 +47,171 @@ const PaymentStatus = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <div className="animate-spin">
-                    <Clock className="h-8 w-8" />
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto"></div>
+                    <p className="mt-4 text-gray-600">Loading order details...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-2xl">
-            <Alert className={`mb-6 ${status === 'success' ? 'bg-green-50' : 'bg-red-50'}`}>
-                <div className="flex items-center gap-2">
-                    {status === 'success' ? (
-                        <CheckCircle2 className="h-5 w-5 text-green-600" />
-                    ) : (
-                        <XCircle className="h-5 w-5 text-red-600" />
-                    )}
-                    <AlertTitle className={status === 'success' ? 'text-green-800' : 'text-red-800'}>
-                        Payment {status === 'success' ? 'Successful' : 'Failed'}
-                    </AlertTitle>
-                </div>
-                <AlertDescription className="mt-2">
-                    {status === 'success' 
-                        ? "Your payment has been processed successfully. We'll start processing your order soon."
-                        : "We couldn't process your payment. Please try again or contact support if the issue persists."}
-                </AlertDescription>
-            </Alert>
-
-            {order && (
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex justify-between items-center">
-                            Order Details
-                            <Badge variant={status === 'success' ? "success" : "destructive"}>
-                                {order.paymentStatus}
-                            </Badge>
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            <div className="grid grid-cols-2 gap-6">
-                                <div>
-                                    <p className="text-sm text-muted-foreground">Order ID</p>
-                                    <p className="font-medium">{order._id}</p>
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-12">
+            <div className="container mx-auto px-4 max-w-4xl">
+                {/* Status Banner */}
+                <div className={`mb-8 rounded-2xl overflow-hidden shadow-lg ${
+                    status === 'success' 
+                        ? 'bg-gradient-to-r from-green-500 to-emerald-600' 
+                        : 'bg-gradient-to-r from-red-500 to-rose-600'
+                }`}>
+                    <div className="p-8 text-white text-center">
+                        <div className="flex justify-center mb-4">
+                            {status === 'success' ? (
+                                <div className="bg-white rounded-full p-4">
+                                    <CheckCircle2 className="h-16 w-16 text-green-600" />
                                 </div>
-                                <div>
-                                    <p className="text-sm text-muted-foreground">Order Date</p>
-                                    <p className="font-medium">
-                                        {order.orderDate}
-                                    </p>
+                            ) : (
+                                <div className="bg-white rounded-full p-4">
+                                    <XCircle className="h-16 w-16 text-red-600" />
                                 </div>
-                            </div>
-
-                            <Separator />
-
-                            <div>
-                                <h3 className="font-semibold mb-2">Customer Details</h3>
-                                <div className="space-y-1">
-                                    <p className="text-sm">Name: {order.customer.name}</p>
-                                    <p className="text-sm">Phone: {order.customer.phoneNumber}</p>
-                                    {order.customer.email && (
-                                        <p className="text-sm">Email: {order.customer.email}</p>
-                                    )}
-                                    <p className="text-sm">adress: {order.shippingAddress}</p>
-                                </div>
-                            </div>
-
-                            <Separator />
-
-                            <div>
-                                <h3 className="font-semibold mb-2">Order Summary</h3>
-                                <div className="space-y-2">
-                                    <div className="flex justify-between items-center">
-                                        <span>Total Amount:</span>
-                                        <span className="font-bold">₹{order.totalAmount}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span>Shipping Status:</span>
-                                        <Badge variant={order.shipped ? "success" : "secondary"}>
-                                            <Package className="w-4 h-4 mr-1" />
-                                            {order.shipped ? "Shipped" : "Processing"}
-                                        </Badge>
-                                    </div>
-                                </div>
-                            </div>
+                            )}
                         </div>
-                    </CardContent>
-                </Card>
-            )}
+                        <h1 className="text-4xl font-bold mb-2">
+                            {status === 'success' ? 'Payment Successful!' : 'Payment Failed'}
+                        </h1>
+                        <p className="text-xl text-white/90">
+                            {status === 'success' 
+                                ? "Thank you for your order. We'll start processing it right away."
+                                : "We couldn't process your payment. Please try again or contact support."}
+                        </p>
+                    </div>
+                </div>
 
-            <div className="mt-6 flex justify-center gap-4">
-                <Button onClick={() => navigate('/')}>
-                    Back to Home
-                </Button>
-                {status === 'failed' && (
-                    <Button variant="secondary" onClick={() => window.location.reload()}>
-                        Try Again
-                    </Button>
+                {order && (
+                    <div className="space-y-6">
+                        {/* Order Summary Card */}
+                        <Card className="border-0 shadow-xl">
+                            <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                                <div className="flex justify-between items-center">
+                                    <CardTitle className="text-2xl">Order Details</CardTitle>
+                                    <Badge className={`text-sm px-3 py-1 ${
+                                        status === 'success' 
+                                            ? 'bg-green-500 hover:bg-green-600' 
+                                            : 'bg-red-500 hover:bg-red-600'
+                                    }`}>
+                                        {order.paymentStatus}
+                                    </Badge>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                    <div className="flex items-start gap-3">
+                                        <div className="bg-blue-100 rounded-full p-2">
+                                            <CreditCard className="h-5 w-5 text-blue-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm text-gray-500">Order ID</p>
+                                            <p className="font-semibold text-gray-900">{order._id}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-3">
+                                        <div className="bg-purple-100 rounded-full p-2">
+                                            <Calendar className="h-5 w-5 text-purple-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm text-gray-500">Order Date</p>
+                                            <p className="font-semibold text-gray-900">{order.orderDate}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <Separator className="my-6" />
+
+                                {/* Customer Details */}
+                                <div className="mb-6">
+                                    <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                                        <User className="h-5 w-5 text-blue-600" />
+                                        Customer Information
+                                    </h3>
+                                    <div className="bg-gray-50 rounded-xl p-4 space-y-3">
+                                        <div className="flex items-center gap-3">
+                                            <User className="h-4 w-4 text-gray-500" />
+                                            <span className="text-gray-900 font-medium">{order.customer.name}</span>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <Phone className="h-4 w-4 text-gray-500" />
+                                            <span className="text-gray-900">{order.customer.phoneNumber}</span>
+                                        </div>
+                                        {order.customer.email && (
+                                            <div className="flex items-center gap-3">
+                                                <Mail className="h-4 w-4 text-gray-500" />
+                                                <span className="text-gray-900">{order.customer.email}</span>
+                                            </div>
+                                        )}
+                                        <div className="flex items-start gap-3">
+                                            <MapPin className="h-4 w-4 text-gray-500 mt-1" />
+                                            <span className="text-gray-900">{order.shippingAddress}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <Separator className="my-6" />
+
+                                {/* Order Summary */}
+                                <div>
+                                    <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                                        <Package className="h-5 w-5 text-blue-600" />
+                                        Order Summary
+                                    </h3>
+                                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 space-y-4">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-700 text-lg">Total Amount:</span>
+                                            <span className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                                                ₹{order.totalAmount}
+                                            </span>
+                                        </div>
+                                        <Separator />
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-700">Shipping Status:</span>
+                                            <Badge 
+                                                variant={order.shipped ? "default" : "secondary"}
+                                                className={`${
+                                                    order.shipped 
+                                                        ? 'bg-green-500 hover:bg-green-600' 
+                                                        : 'bg-gray-400'
+                                                } text-white`}
+                                            >
+                                                <Package className="w-4 h-4 mr-2" />
+                                                {order.shipped ? "Shipped" : "Processing"}
+                                            </Badge>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <Button 
+                                size="lg"
+                                onClick={() => navigate('/')}
+                                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                            >
+                                Continue Shopping
+                            </Button>
+                            {status === 'failed' && (
+                                <Button 
+                                    size="lg"
+                                    variant="outline" 
+                                    onClick={() => window.location.reload()}
+                                    className="border-2 border-red-600 text-red-600 hover:bg-red-50"
+                                >
+                                    Try Again
+                                </Button>
+                            )}
+                        </div>
+                    </div>
                 )}
             </div>
         </div>
