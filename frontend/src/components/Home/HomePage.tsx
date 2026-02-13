@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, ShoppingBag, Star, TrendingUp, Shield, Truck, CreditCard, Package } from "lucide-react";
+import { ArrowRight, Leaf, Star, TrendingUp, Shield, Truck, Package, Sprout } from "lucide-react";
 import { useNavigate, useLocation } from "react-router";
 import { useEffect, useState } from "react";
 import { GetProducts } from "@/api";
@@ -41,9 +41,9 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
+      <section className="relative overflow-hidden bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600">
         <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]" />
         <div className="relative container mx-auto px-4 py-24 md:py-32">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -53,27 +53,27 @@ const HomePage = () => {
                 Trending Now
               </Badge>
               <h1 className="text-5xl md:text-7xl font-bold leading-tight">
-                Shop Smart,
+                Grow Your
                 <br />
-                <span className="text-blue-200">Live Better</span>
+                <span className="text-green-200">Dream Garden</span>
               </h1>
-              <p className="text-xl text-blue-100 max-w-lg">
-                Discover amazing products with unbeatable prices. Your one-stop destination for all your shopping needs.
+              <p className="text-xl text-green-100 max-w-lg">
+                Premium gardening kits with organic seeds, tools, and everything you need to start your green journey.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   size="lg"
                   onClick={() => navigate('/products')}
-                  className="bg-white text-blue-600 hover:bg-blue-50 shadow-xl hover:shadow-2xl transition-all h-14 px-8 text-lg"
+                  className="bg-white text-green-600 hover:bg-green-50 shadow-xl hover:shadow-2xl transition-all h-14 px-8 text-lg"
                 >
-                  Shop Now
+                  Shop Kits
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Button
                   size="lg"
                   variant="outline"
                   onClick={() => navigate('/about')}
-                  className="border-2 border-white text-white hover:bg-white/10 backdrop-blur-sm h-14 px-8 text-lg"
+                  className="border-2 border-white text-white bg-transparent hover:bg-white/10 backdrop-blur-sm h-14 px-8 text-lg"
                 >
                   Learn More
                 </Button>
@@ -83,7 +83,7 @@ const HomePage = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-white/20 rounded-3xl blur-3xl"></div>
                 <div className="relative bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20">
-                  <ShoppingBag className="h-64 w-64 text-white/90" />
+                  <Sprout className="h-64 w-64 text-white/90" />
                 </div>
               </div>
             </div>
@@ -104,40 +104,40 @@ const HomePage = () => {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-blue-50 to-white">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-green-50 to-white">
               <CardContent className="flex flex-col items-center text-center p-6">
-                <div className="bg-blue-600 rounded-full p-4 mb-4">
+                <div className="bg-green-600 rounded-full p-4 mb-4">
                   <Truck className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="font-bold text-lg mb-2">Free Delivery</h3>
                 <p className="text-gray-600 text-sm">On orders above ₹499</p>
               </CardContent>
             </Card>
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-green-50 to-white">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-emerald-50 to-white">
               <CardContent className="flex flex-col items-center text-center p-6">
-                <div className="bg-green-600 rounded-full p-4 mb-4">
-                  <Shield className="h-8 w-8 text-white" />
+                <div className="bg-emerald-600 rounded-full p-4 mb-4">
+                  <Leaf className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="font-bold text-lg mb-2">Secure Payment</h3>
-                <p className="text-gray-600 text-sm">100% secure transactions</p>
+                <h3 className="font-bold text-lg mb-2">100% Organic</h3>
+                <p className="text-gray-600 text-sm">Non-GMO seeds included</p>
               </CardContent>
             </Card>
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-purple-50 to-white">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-teal-50 to-white">
               <CardContent className="flex flex-col items-center text-center p-6">
-                <div className="bg-purple-600 rounded-full p-4 mb-4">
+                <div className="bg-teal-600 rounded-full p-4 mb-4">
                   <Package className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="font-bold text-lg mb-2">Easy Returns</h3>
-                <p className="text-gray-600 text-sm">7 days return policy</p>
+                <h3 className="font-bold text-lg mb-2">Complete Kits</h3>
+                <p className="text-gray-600 text-sm">Everything you need</p>
               </CardContent>
             </Card>
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-orange-50 to-white">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-lime-50 to-white">
               <CardContent className="flex flex-col items-center text-center p-6">
-                <div className="bg-orange-600 rounded-full p-4 mb-4">
-                  <CreditCard className="h-8 w-8 text-white" />
+                <div className="bg-lime-600 rounded-full p-4 mb-4">
+                  <Shield className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="font-bold text-lg mb-2">Best Prices</h3>
-                <p className="text-gray-600 text-sm">Guaranteed low prices</p>
+                <h3 className="font-bold text-lg mb-2">Growth Guarantee</h3>
+                <p className="text-gray-600 text-sm">Or money back</p>
               </CardContent>
             </Card>
           </div>
@@ -148,10 +148,10 @@ const HomePage = () => {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <Badge className="mb-4 bg-blue-600">Featured Collection</Badge>
-            <h2 className="text-4xl font-bold mb-4">Trending Products</h2>
+            <Badge className="mb-4 bg-green-600">Featured Collection</Badge>
+            <h2 className="text-4xl font-bold mb-4">Best-Selling Gardening Kits</h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Check out our most popular products loved by thousands of customers
+              Discover our most popular kits loved by thousands of gardening enthusiasts
             </p>
           </div>
 
@@ -183,7 +183,7 @@ const HomePage = () => {
                       className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     <div className="absolute top-3 right-3">
-                      <Badge className="bg-blue-600 text-white shadow-lg">
+                      <Badge className="bg-green-600 text-white shadow-lg">
                         <Package className="h-3 w-3 mr-1" />
                         In Stock
                       </Badge>
@@ -192,7 +192,7 @@ const HomePage = () => {
                   </div>
 
                   <CardContent className="p-5">
-                    <h3 className="text-lg font-bold mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">
+                    <h3 className="text-lg font-bold mb-2 line-clamp-1 group-hover:text-green-600 transition-colors">
                       {product.name}
                     </h3>
 
@@ -210,11 +210,11 @@ const HomePage = () => {
                     </div>
 
                     <div className="flex justify-between items-center">
-                      <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                      <p className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                         ₹{product.price}
                       </p>
                       <Button
-                        className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-md"
+                        className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-md"
                         onClick={(e) => {
                           e.stopPropagation();
                           navigate(`/products/${product._id}${location.search}`);
@@ -234,9 +234,9 @@ const HomePage = () => {
             <Button
               size="lg"
               onClick={() => navigate('/products')}
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 h-14 px-8 text-lg"
+              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 h-14 px-8 text-lg"
             >
-              View All Products
+              View All Kits
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
@@ -244,21 +244,21 @@ const HomePage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-600">
+      <section className="py-20 bg-gradient-to-r from-green-600 to-emerald-600">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Ready to Start Shopping?
+            Ready to Start Gardening?
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of happy customers who trust us for their shopping needs
+          <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
+            Join thousands of happy gardeners who grow with our premium kits
           </p>
           <Button
             size="lg"
             onClick={() => navigate('/products')}
-            className="bg-white text-blue-600 hover:bg-blue-50 shadow-xl hover:shadow-2xl transition-all h-14 px-12 text-lg"
+            className="bg-white text-green-600 hover:bg-green-50 shadow-xl hover:shadow-2xl transition-all h-14 px-12 text-lg"
           >
-            Browse Products
-            <ShoppingBag className="ml-2 h-5 w-5" />
+            Browse Kits
+            <Leaf className="ml-2 h-5 w-5" />
           </Button>
         </div>
       </section>

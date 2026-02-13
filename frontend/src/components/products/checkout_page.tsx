@@ -47,9 +47,9 @@ const PaymentStatus = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto"></div>
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mx-auto"></div>
                     <p className="mt-4 text-gray-600">Loading order details...</p>
                 </div>
             </div>
@@ -57,7 +57,7 @@ const PaymentStatus = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-12">
+        <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 py-12">
             <div className="container mx-auto px-4 max-w-4xl">
                 {/* Status Banner */}
                 <div className={`mb-8 rounded-2xl overflow-hidden shadow-lg ${
@@ -92,7 +92,7 @@ const PaymentStatus = () => {
                     <div className="space-y-6">
                         {/* Order Summary Card */}
                         <Card className="border-0 shadow-xl">
-                            <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                            <CardHeader className="bg-gradient-to-r from-green-600 to-emerald-600 text-white">
                                 <div className="flex justify-between items-center">
                                     <CardTitle className="text-2xl">Order Details</CardTitle>
                                     <Badge className={`text-sm px-3 py-1 ${
@@ -107,8 +107,8 @@ const PaymentStatus = () => {
                             <CardContent className="p-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                     <div className="flex items-start gap-3">
-                                        <div className="bg-blue-100 rounded-full p-2">
-                                            <CreditCard className="h-5 w-5 text-blue-600" />
+                                        <div className="bg-green-100 rounded-full p-2">
+                                            <CreditCard className="h-5 w-5 text-green-600" />
                                         </div>
                                         <div>
                                             <p className="text-sm text-gray-500">Order ID</p>
@@ -116,8 +116,8 @@ const PaymentStatus = () => {
                                         </div>
                                     </div>
                                     <div className="flex items-start gap-3">
-                                        <div className="bg-purple-100 rounded-full p-2">
-                                            <Calendar className="h-5 w-5 text-purple-600" />
+                                        <div className="bg-emerald-100 rounded-full p-2">
+                                            <Calendar className="h-5 w-5 text-emerald-600" />
                                         </div>
                                         <div>
                                             <p className="text-sm text-gray-500">Order Date</p>
@@ -131,7 +131,7 @@ const PaymentStatus = () => {
                                 {/* Customer Details */}
                                 <div className="mb-6">
                                     <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                                        <User className="h-5 w-5 text-blue-600" />
+                                        <User className="h-5 w-5 text-green-600" />
                                         Customer Information
                                     </h3>
                                     <div className="bg-gray-50 rounded-xl p-4 space-y-3">
@@ -161,13 +161,13 @@ const PaymentStatus = () => {
                                 {/* Order Summary */}
                                 <div>
                                     <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                                        <Package className="h-5 w-5 text-blue-600" />
+                                        <Package className="h-5 w-5 text-green-600" />
                                         Order Summary
                                     </h3>
-                                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 space-y-4">
+                                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 space-y-4">
                                         <div className="flex justify-between items-center">
                                             <span className="text-gray-700 text-lg">Total Amount:</span>
-                                            <span className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                                            <span className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                                                 ₹{order.totalAmount}
                                             </span>
                                         </div>
@@ -196,7 +196,7 @@ const PaymentStatus = () => {
                             <Button 
                                 size="lg"
                                 onClick={() => navigate('/')}
-                                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                             >
                                 Continue Shopping
                             </Button>

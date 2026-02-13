@@ -138,9 +138,9 @@ CreateOder(orderdetails).then((response)=>{
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading product...</p>
         </div>
       </div>
@@ -148,7 +148,7 @@ CreateOder(orderdetails).then((response)=>{
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
@@ -174,21 +174,21 @@ CreateOder(orderdetails).then((response)=>{
 
               {/* Trust Badges */}
               <div className="grid grid-cols-3 gap-4 mt-6">
-                <Card className="border-0 bg-blue-50">
+                <Card className="border-0 bg-green-50">
                   <CardContent className="flex flex-col items-center justify-center p-4">
-                    <Shield className="h-8 w-8 text-blue-600 mb-2" />
+                    <Shield className="h-8 w-8 text-green-600 mb-2" />
                     <p className="text-xs text-center font-medium">Secure Payment</p>
                   </CardContent>
                 </Card>
-                <Card className="border-0 bg-green-50">
+                <Card className="border-0 bg-emerald-50">
                   <CardContent className="flex flex-col items-center justify-center p-4">
-                    <Truck className="h-8 w-8 text-green-600 mb-2" />
+                    <Truck className="h-8 w-8 text-emerald-600 mb-2" />
                     <p className="text-xs text-center font-medium">Fast Delivery</p>
                   </CardContent>
                 </Card>
-                <Card className="border-0 bg-purple-50">
+                <Card className="border-0 bg-teal-50">
                   <CardContent className="flex flex-col items-center justify-center p-4">
-                    <Package className="h-8 w-8 text-purple-600 mb-2" />
+                    <Package className="h-8 w-8 text-teal-600 mb-2" />
                     <p className="text-xs text-center font-medium">Easy Returns</p>
                   </CardContent>
                 </Card>
@@ -198,7 +198,7 @@ CreateOder(orderdetails).then((response)=>{
             {/* Product Details */}
             <div className="flex flex-col">
               <div>
-                <Badge className="mb-4 bg-blue-600">In Stock</Badge>
+                <Badge className="mb-4 bg-green-600">In Stock</Badge>
                 <h1 className="text-4xl font-bold mb-4 text-gray-900">{product?.name}</h1>
                 
                 {/* Rating */}
@@ -217,10 +217,10 @@ CreateOder(orderdetails).then((response)=>{
                   {product?.description}
                 </p>
 
-                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 mb-6">
+                <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl p-6 mb-6">
                   <p className="text-white text-sm mb-2">Special Price</p>
                   <p className="text-5xl font-bold text-white">₹{product?.price}</p>
-                  <p className="text-blue-100 text-sm mt-2">Inclusive of all taxes</p>
+                  <p className="text-green-100 text-sm mt-2">Inclusive of all taxes</p>
                 </div>
 
                 {/* Features */}
@@ -232,14 +232,14 @@ CreateOder(orderdetails).then((response)=>{
                     <span>100% Genuine Product</span>
                   </div>
                   <div className="flex items-center gap-3 text-gray-700">
-                    <div className="bg-blue-100 rounded-full p-2">
-                      <Truck className="h-4 w-4 text-blue-600" />
+                    <div className="bg-green-100 rounded-full p-2">
+                      <Truck className="h-4 w-4 text-green-600" />
                     </div>
                     <span>Free Delivery Available</span>
                   </div>
                   <div className="flex items-center gap-3 text-gray-700">
-                    <div className="bg-purple-100 rounded-full p-2">
-                      <CreditCard className="h-4 w-4 text-purple-600" />
+                    <div className="bg-emerald-100 rounded-full p-2">
+                      <CreditCard className="h-4 w-4 text-emerald-600" />
                     </div>
                     <span>Secure Payment Gateway</span>
                   </div>
@@ -251,7 +251,7 @@ CreateOder(orderdetails).then((response)=>{
                 <DialogTrigger asChild>
                   <Button 
                     size="lg" 
-                    className="w-full h-14 text-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all"
+                    className="w-full h-14 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all"
                   >
                     <ShoppingCart className="mr-2 h-5 w-5" />
                     Buy Now
@@ -331,7 +331,7 @@ CreateOder(orderdetails).then((response)=>{
 
                     <Button 
                       type="submit" 
-                      className="w-full h-12 text-base bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                      className="w-full h-12 text-base bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
                     >
                       <CreditCard className="mr-2 h-5 w-5" />
                       Proceed to Payment

@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { ShoppingBag, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Youtube } from "lucide-react";
+import { Sprout, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Youtube } from "lucide-react";
 
 function Footer() {
   return (
@@ -9,27 +9,27 @@ function Footer() {
           {/* Brand Section */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 rounded-lg">
-                <ShoppingBag className="h-6 w-6 text-white" />
+              <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-2 rounded-lg">
+                <Sprout className="h-6 w-6 text-white" />
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
-                QuickSales
+              <span className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                GetGardening
               </span>
             </div>
             <p className="text-gray-400 text-sm">
-              Your one-stop destination for all your shopping needs. Quality products at unbeatable prices.
+              Your one-stop destination for premium gardening kits and supplies. Grow your dream garden with our quality products.
             </p>
             <div className="flex gap-3">
-              <a href="#" className="bg-gray-800 hover:bg-blue-600 p-2 rounded-full transition-colors">
+              <a href="#" className="bg-gray-800 hover:bg-green-600 p-2 rounded-full transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="bg-gray-800 hover:bg-blue-400 p-2 rounded-full transition-colors">
+              <a href="#" className="bg-gray-800 hover:bg-green-500 p-2 rounded-full transition-colors">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="bg-gray-800 hover:bg-pink-600 p-2 rounded-full transition-colors">
+              <a href="#" className="bg-gray-800 hover:bg-green-600 p-2 rounded-full transition-colors">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="bg-gray-800 hover:bg-red-600 p-2 rounded-full transition-colors">
+              <a href="#" className="bg-gray-800 hover:bg-green-700 p-2 rounded-full transition-colors">
                 <Youtube className="h-5 w-5" />
               </a>
             </div>
@@ -95,7 +95,7 @@ function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start gap-3 text-gray-400">
                 <MapPin className="h-5 w-5 flex-shrink-0 mt-0.5" />
-                <span>123 Shopping Street, Market City, 12345</span>
+                <span>123 Garden Lane, Green Valley, 12345</span>
               </li>
               <li className="flex items-center gap-3 text-gray-400">
                 <Phone className="h-5 w-5 flex-shrink-0" />
@@ -105,8 +105,8 @@ function Footer() {
               </li>
               <li className="flex items-center gap-3 text-gray-400">
                 <Mail className="h-5 w-5 flex-shrink-0" />
-                <a href="mailto:support@quicksales.com" className="hover:text-white transition-colors">
-                  support@quicksales.com
+                <a href="mailto:support@getgardening.in" className="hover:text-white transition-colors">
+                  support@getgardening.in
                 </a>
               </li>
             </ul>
@@ -116,7 +116,7 @@ function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} QuickSales. All rights reserved.
+            © {new Date().getFullYear()} GetGardening. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm">
             <a href="#" className="text-gray-400 hover:text-white transition-colors">

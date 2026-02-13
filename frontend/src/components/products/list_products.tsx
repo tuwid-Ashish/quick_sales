@@ -64,23 +64,23 @@ const ProductsPage = () => {
 
   if (state.loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading amazing products...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading amazing gardening products...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-16">
+      <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-5xl font-bold mb-4">Discover Our Products</h1>
-            <p className="text-xl text-blue-100">Find the perfect items for you with amazing deals</p>
+            <h1 className="text-5xl font-bold mb-4">Discover Our Gardening Kits</h1>
+            <p className="text-xl text-green-100">Grow your dream garden with our premium kits and supplies</p>
           </div>
         </div>
       </div>
@@ -102,7 +102,7 @@ const ProductsPage = () => {
                   className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" 
                 />
                 <div className="absolute top-3 right-3">
-                  <Badge className="bg-blue-600 text-white shadow-lg">
+                  <Badge className="bg-green-600 text-white shadow-lg">
                     <Package className="h-3 w-3 mr-1" />
                     In Stock
                   </Badge>
@@ -112,7 +112,7 @@ const ProductsPage = () => {
 
               {/* Content */}
               <CardContent className="p-5">
-                <CardTitle className="text-lg font-bold mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">
+                <CardTitle className="text-lg font-bold mb-2 line-clamp-1 group-hover:text-green-600 transition-colors">
                   {product.name}
                 </CardTitle>
                 
@@ -136,12 +136,12 @@ const ProductsPage = () => {
                 {/* Price & Button */}
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                    <p className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                       ₹{product.price}
                     </p>
                   </div>
                   <Button 
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-md group-hover:shadow-lg transition-all"
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-md group-hover:shadow-lg transition-all"
                     onClick={(e) => {
                       e.stopPropagation();
                       navigate(`/products/${product._id}${location.search}`);
@@ -164,7 +164,7 @@ const ProductsPage = () => {
               variant="outline"
               disabled={state.currentPage === 1}
               onClick={() => setState(prev => ({ ...prev, currentPage: prev.currentPage - 1 }))}
-              className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-600"
+              className="hover:bg-green-50 hover:text-green-600 hover:border-green-600"
             >
               Previous
             </Button>
@@ -175,8 +175,8 @@ const ProductsPage = () => {
                 variant={state.currentPage === index + 1 ? "default" : "outline"}
                 onClick={() => setState(prev => ({ ...prev, currentPage: index + 1 }))}
                 className={state.currentPage === index + 1 
-                  ? "bg-gradient-to-r from-blue-600 to-indigo-600" 
-                  : "hover:bg-blue-50 hover:text-blue-600 hover:border-blue-600"}
+                  ? "bg-gradient-to-r from-green-600 to-emerald-600" 
+                  : "hover:bg-green-50 hover:text-green-600 hover:border-green-600"}
               >
                 {index + 1}
               </Button>
@@ -186,7 +186,7 @@ const ProductsPage = () => {
               variant="outline"
               disabled={state.currentPage === state.totalPages}
               onClick={() => setState(prev => ({ ...prev, currentPage: prev.currentPage + 1 }))}
-              className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-600"
+              className="hover:bg-green-50 hover:text-green-600 hover:border-green-600"
             >
               Next
             </Button>
