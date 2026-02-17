@@ -30,7 +30,8 @@ const productSchema = new Schema({
         type: [String],
         validate: {
             validator: function(v) {
-                return v.every(url => /^https?:\/\/.+\.(jpg|jpeg|png|gif)$/.test(url));
+                // Accept any valid HTTP/HTTPS URL for images (Cloudinary, etc.)
+                return v.every(url => /^https?:\/\/.+/.test(url));
             },
             message: props => `${props.value} is not a valid image URL!`
         }
