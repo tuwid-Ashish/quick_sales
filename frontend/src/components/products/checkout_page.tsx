@@ -47,9 +47,9 @@ const PaymentStatus = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex items-center justify-center">
+            <div className="min-h-screen bg-[#fafdf7] flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mx-auto"></div>
+                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-700 mx-auto"></div>
                     <p className="mt-4 text-gray-600">Loading order details...</p>
                 </div>
             </div>
@@ -57,7 +57,7 @@ const PaymentStatus = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 py-12">
+        <div className="min-h-screen bg-[#fafdf7] py-12">
             <div className="container mx-auto px-4 max-w-4xl">
                 {/* Status Banner */}
                 <div className={`mb-8 rounded-2xl overflow-hidden shadow-lg ${
@@ -92,7 +92,7 @@ const PaymentStatus = () => {
                     <div className="space-y-6">
                         {/* Order Summary Card */}
                         <Card className="border-0 shadow-xl">
-                            <CardHeader className="bg-gradient-to-r from-green-600 to-emerald-600 text-white">
+                            <CardHeader className="bg-gradient-to-br from-[#2d5016] to-[#3a6b1e] text-white">
                                 <div className="flex justify-between items-center">
                                     <CardTitle className="text-2xl">Order Details</CardTitle>
                                     <Badge className={`text-sm px-3 py-1 ${
@@ -167,7 +167,7 @@ const PaymentStatus = () => {
                                     <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 space-y-4">
                                         <div className="flex justify-between items-center">
                                             <span className="text-gray-700 text-lg">Total Amount:</span>
-                                            <span className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                                            <span className="text-3xl font-bold text-green-800">
                                                 ₹{order.totalAmount}
                                             </span>
                                         </div>
@@ -196,7 +196,7 @@ const PaymentStatus = () => {
                             <Button 
                                 size="lg"
                                 onClick={() => navigate('/')}
-                                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                                className="bg-[#2d5016] hover:bg-[#3a6b1e]"
                             >
                                 Continue Shopping
                             </Button>

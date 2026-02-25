@@ -138,19 +138,19 @@ CreateOder(orderdetails).then((response)=>{
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#fafdf7] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading product...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-700 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading garden product...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 py-12">
+    <div className="min-h-screen bg-[#fafdf7] py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-green-100">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
             {/* Product Image Carousel */}
             <div className="space-y-4">
@@ -174,22 +174,22 @@ CreateOder(orderdetails).then((response)=>{
 
               {/* Trust Badges */}
               <div className="grid grid-cols-3 gap-4 mt-6">
-                <Card className="border-0 bg-green-50">
+                <Card className="border border-green-100 bg-green-50/50">
                   <CardContent className="flex flex-col items-center justify-center p-4">
-                    <Shield className="h-8 w-8 text-green-600 mb-2" />
-                    <p className="text-xs text-center font-medium">Secure Payment</p>
+                    <Shield className="h-8 w-8 text-green-700 mb-2" />
+                    <p className="text-xs text-center font-medium text-green-800">Secure Payment</p>
                   </CardContent>
                 </Card>
-                <Card className="border-0 bg-emerald-50">
+                <Card className="border border-green-100 bg-green-50/50">
                   <CardContent className="flex flex-col items-center justify-center p-4">
-                    <Truck className="h-8 w-8 text-emerald-600 mb-2" />
-                    <p className="text-xs text-center font-medium">Fast Delivery</p>
+                    <Truck className="h-8 w-8 text-green-700 mb-2" />
+                    <p className="text-xs text-center font-medium text-green-800">Fast Delivery</p>
                   </CardContent>
                 </Card>
-                <Card className="border-0 bg-teal-50">
+                <Card className="border border-green-100 bg-green-50/50">
                   <CardContent className="flex flex-col items-center justify-center p-4">
-                    <Package className="h-8 w-8 text-teal-600 mb-2" />
-                    <p className="text-xs text-center font-medium">Easy Returns</p>
+                    <Package className="h-8 w-8 text-green-700 mb-2" />
+                    <p className="text-xs text-center font-medium text-green-800">Easy Returns</p>
                   </CardContent>
                 </Card>
               </div>
@@ -198,7 +198,7 @@ CreateOder(orderdetails).then((response)=>{
             {/* Product Details */}
             <div className="flex flex-col">
               <div>
-                <Badge className="mb-4 bg-green-600">In Stock</Badge>
+                <Badge className="mb-4 bg-green-700">In Stock</Badge>
                 <h1 className="text-4xl font-bold mb-4 text-gray-900">{product?.name}</h1>
                 
                 {/* Rating */}
@@ -217,29 +217,29 @@ CreateOder(orderdetails).then((response)=>{
                   {product?.description}
                 </p>
 
-                <div className="bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl p-6 mb-6">
-                  <p className="text-white text-sm mb-2">Special Price</p>
+                <div className="bg-gradient-to-br from-[#2d5016] to-[#3a6b1e] rounded-xl p-6 mb-6">
+                  <p className="text-lime-200 text-sm mb-2">Special Garden Price</p>
                   <p className="text-5xl font-bold text-white">₹{product?.price}</p>
-                  <p className="text-green-100 text-sm mt-2">Inclusive of all taxes</p>
+                  <p className="text-green-200 text-sm mt-2">Inclusive of all taxes · Free seeds with every order</p>
                 </div>
 
                 {/* Features */}
                 <div className="space-y-3 mb-8">
                   <div className="flex items-center gap-3 text-gray-700">
                     <div className="bg-green-100 rounded-full p-2">
-                      <Shield className="h-4 w-4 text-green-600" />
+                      <Shield className="h-4 w-4 text-green-700" />
                     </div>
-                    <span>100% Genuine Product</span>
+                    <span>100% Organic & Genuine</span>
                   </div>
                   <div className="flex items-center gap-3 text-gray-700">
                     <div className="bg-green-100 rounded-full p-2">
-                      <Truck className="h-4 w-4 text-green-600" />
+                      <Truck className="h-4 w-4 text-green-700" />
                     </div>
-                    <span>Free Delivery Available</span>
+                    <span>Free Delivery · Eco-Friendly Packaging</span>
                   </div>
                   <div className="flex items-center gap-3 text-gray-700">
-                    <div className="bg-emerald-100 rounded-full p-2">
-                      <CreditCard className="h-4 w-4 text-emerald-600" />
+                    <div className="bg-green-100 rounded-full p-2">
+                      <CreditCard className="h-4 w-4 text-green-700" />
                     </div>
                     <span>Secure Payment Gateway</span>
                   </div>
@@ -251,7 +251,7 @@ CreateOder(orderdetails).then((response)=>{
                 <DialogTrigger asChild>
                   <Button 
                     size="lg" 
-                    className="w-full h-14 text-lg bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all"
+                    className="w-full h-14 text-lg bg-[#2d5016] hover:bg-[#3a6b1e] shadow-lg hover:shadow-xl transition-all"
                   >
                     <ShoppingCart className="mr-2 h-5 w-5" />
                     Buy Now
@@ -331,7 +331,7 @@ CreateOder(orderdetails).then((response)=>{
 
                     <Button 
                       type="submit" 
-                      className="w-full h-12 text-base bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                      className="w-full h-12 text-base bg-[#2d5016] hover:bg-[#3a6b1e]"
                     >
                       <CreditCard className="mr-2 h-5 w-5" />
                       Proceed to Payment

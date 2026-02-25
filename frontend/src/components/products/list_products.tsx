@@ -1,6 +1,6 @@
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Star, ArrowRight, Package } from "lucide-react";
+import { ShoppingCart, Star, ArrowRight, Package, Leaf, Sprout } from "lucide-react";
 import {  useLocation, useNavigate } from "react-router"
 import { useEffect, useState } from "react";
 import { GetProducts } from "@/api";
@@ -64,23 +64,37 @@ const ProductsPage = () => {
 
   if (state.loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#fafdf7] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading amazing gardening products...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-700 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading garden collection...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50">
+    <div className="min-h-screen bg-[#fafdf7]">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white py-16">
-        <div className="container mx-auto px-4">
+      <div className="text-white py-16 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.pexels.com/photos/1456613/pexels-photo-1456613.jpeg?auto=compress&cs=tinysrgb&w=1920&h=500&fit=crop"
+            alt="Garden collection display"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1a3c0a]/90 via-[#2d5016]/80 to-[#1a3c0a]/70" />
+        </div>
+        <div className="container mx-auto px-4 relative">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-5xl font-bold mb-4">Discover Our Gardening Kits</h1>
-            <p className="text-xl text-green-100">Grow your dream garden with our premium kits and supplies</p>
+            <Badge className="bg-lime-400/20 text-lime-200 border-lime-400/30 mb-4">
+              <Sprout className="h-3 w-3 mr-1" />
+              Premium Collection
+            </Badge>
+            <h1 className="text-5xl font-bold mb-4">Our Garden Collection</h1>
+            <p className="text-xl text-green-200/80">
+              Hand-picked gardening kits, organic seeds, and supplies crafted for Indian gardens
+            </p>
           </div>
         </div>
       </div>
@@ -91,7 +105,7 @@ const ProductsPage = () => {
           {state.products.map((product) => (
             <Card 
               key={product._id} 
-              className="group hover:shadow-2xl transition-all duration-300 border-0 bg-white overflow-hidden cursor-pointer transform hover:-translate-y-2"
+              className="group hover:shadow-2xl transition-all duration-300 border border-green-100 bg-white overflow-hidden cursor-pointer transform hover:-translate-y-2"
               onClick={() => navigate(`/products/${product._id}${location.search}`)}
             >
               {/* Image Container */}
@@ -101,22 +115,28 @@ const ProductsPage = () => {
                   alt={product.name} 
                   className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" 
                 />
+                <div className="absolute top-3 left-3">
+                  <Badge className="bg-white/90 text-green-700 shadow-md border-0 backdrop-blur-sm">
+                    <Leaf className="h-3 w-3 mr-1" />
+                    Organic
+                  </Badge>
+                </div>
                 <div className="absolute top-3 right-3">
-                  <Badge className="bg-green-600 text-white shadow-lg">
+                  <Badge className="bg-green-700 text-white shadow-lg">
                     <Package className="h-3 w-3 mr-1" />
                     In Stock
                   </Badge>
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
               {/* Content */}
               <CardContent className="p-5">
-                <CardTitle className="text-lg font-bold mb-2 line-clamp-1 group-hover:text-green-600 transition-colors">
+                <CardTitle className="text-lg font-bold mb-2 line-clamp-1 group-hover:text-green-700 transition-colors">
                   {product.name}
                 </CardTitle>
                 
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2 h-10">
+                <p className="text-gray-500 text-sm mb-4 line-clamp-2 h-10">
                   {product.description && product.description.length > 80
                     ? `${product.description.slice(0, 80)}...`
                     : product.description}
@@ -127,21 +147,21 @@ const ProductsPage = () => {
                   {[...Array(5)].map((_, i) => (
                     <Star 
                       key={i} 
-                      className="h-4 w-4 fill-yellow-400 text-yellow-400" 
+                      className="h-4 w-4 fill-amber-400 text-amber-400" 
                     />
                   ))}
-                  <span className="text-sm text-gray-500 ml-1">(4.8)</span>
+                  <span className="text-sm text-gray-400 ml-1">(4.8)</span>
                 </div>
 
                 {/* Price & Button */}
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                    <p className="text-2xl font-bold text-green-800">
                       ₹{product.price}
                     </p>
                   </div>
                   <Button 
-                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-md group-hover:shadow-lg transition-all"
+                    className="bg-green-700 hover:bg-green-800 shadow-md group-hover:shadow-lg transition-all"
                     onClick={(e) => {
                       e.stopPropagation();
                       navigate(`/products/${product._id}${location.search}`);
@@ -164,7 +184,7 @@ const ProductsPage = () => {
               variant="outline"
               disabled={state.currentPage === 1}
               onClick={() => setState(prev => ({ ...prev, currentPage: prev.currentPage - 1 }))}
-              className="hover:bg-green-50 hover:text-green-600 hover:border-green-600"
+              className="hover:bg-green-50 hover:text-green-700 hover:border-green-700"
             >
               Previous
             </Button>
@@ -175,8 +195,8 @@ const ProductsPage = () => {
                 variant={state.currentPage === index + 1 ? "default" : "outline"}
                 onClick={() => setState(prev => ({ ...prev, currentPage: index + 1 }))}
                 className={state.currentPage === index + 1 
-                  ? "bg-gradient-to-r from-green-600 to-emerald-600" 
-                  : "hover:bg-green-50 hover:text-green-600 hover:border-green-600"}
+                  ? "bg-green-700 hover:bg-green-800" 
+                  : "hover:bg-green-50 hover:text-green-700 hover:border-green-700"}
               >
                 {index + 1}
               </Button>
@@ -186,7 +206,7 @@ const ProductsPage = () => {
               variant="outline"
               disabled={state.currentPage === state.totalPages}
               onClick={() => setState(prev => ({ ...prev, currentPage: prev.currentPage + 1 }))}
-              className="hover:bg-green-50 hover:text-green-600 hover:border-green-600"
+              className="hover:bg-green-50 hover:text-green-700 hover:border-green-700"
             >
               Next
             </Button>

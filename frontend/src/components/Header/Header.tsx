@@ -33,37 +33,42 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
+    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-green-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo & Menu */}
           <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2 group">
-              <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-2 rounded-lg group-hover:scale-110 transition-transform">
-                <Sprout className="h-6 w-6 text-white" />
+            <Link to="/" className="flex items-center gap-2.5 group">
+              <div className="bg-gradient-to-br from-[#2d5016] to-[#3a6b1e] p-2 rounded-xl group-hover:scale-110 transition-transform shadow-sm">
+                <Leaf className="h-5 w-5 text-lime-300" />
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                GetGardening
-              </span>
+              <div className="flex flex-col leading-none">
+                <span className="text-xl font-extrabold text-[#2d5016] tracking-tight">
+                  GetGardening
+                </span>
+                <span className="text-[10px] text-green-600/70 font-medium tracking-widest uppercase">
+                  Grow · Nurture · Bloom
+                </span>
+              </div>
             </Link>
 
             <div className="hidden md:flex items-center gap-1">
               <Link to="/">
-                <Button variant="ghost" className="gap-2 hover:bg-green-50 hover:text-green-600">
+                <Button variant="ghost" className="gap-2 text-gray-700 hover:bg-green-50 hover:text-green-800 font-medium">
                   <Home className="h-4 w-4" />
                   Home
                 </Button>
               </Link>
               <Link to="/products">
-                <Button variant="ghost" className="gap-2 hover:bg-green-50 hover:text-green-600">
-                  <Leaf className="h-4 w-4" />
-                  Products
+                <Button variant="ghost" className="gap-2 text-gray-700 hover:bg-green-50 hover:text-green-800 font-medium">
+                  <Sprout className="h-4 w-4" />
+                  Garden Kits
                 </Button>
               </Link>
               <Link to="/about">
-                <Button variant="ghost" className="gap-2 hover:bg-green-50 hover:text-green-600">
+                <Button variant="ghost" className="gap-2 text-gray-700 hover:bg-green-50 hover:text-green-800 font-medium">
                   <Info className="h-4 w-4" />
-                  About
+                  Our Story
                 </Button>
               </Link>
             </div>
@@ -74,12 +79,12 @@ const Navbar: React.FC = () => {
             {!Status ? (
               <div className="hidden md:flex gap-3">
                 <Link to="/signup">
-                  <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">
+                  <Button variant="outline" className="border-green-700 text-green-800 hover:bg-green-50">
                     Sign Up
                   </Button>
                 </Link>
                 <Link to="/login">
-                  <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                  <Button className="bg-[#2d5016] hover:bg-[#3a6b1e] text-white">
                     Login
                   </Button>
                 </Link>
@@ -87,13 +92,13 @@ const Navbar: React.FC = () => {
             ) : (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full ring-2 ring-green-100 hover:ring-green-200">
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full ring-2 ring-green-200 hover:ring-green-300">
                     <Avatar className="h-10 w-10">
                       <AvatarImage
                         src="https://api.dicebear.com/7.x/avataaars/svg?seed=User"
                         alt="Profile"
                       />
-                      <AvatarFallback className="bg-gradient-to-r from-green-600 to-emerald-600 text-white">
+                      <AvatarFallback className="bg-[#2d5016] text-lime-100">
                         {usertype?.username?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
@@ -102,7 +107,7 @@ const Navbar: React.FC = () => {
                 <DropdownMenuContent align="end" className="w-56">
                   <div className="flex items-center gap-2 p-2">
                     <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-gradient-to-r from-green-600 to-emerald-600 text-white text-sm">
+                      <AvatarFallback className="bg-[#2d5016] text-lime-100 text-sm">
                         {usertype?.username?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
