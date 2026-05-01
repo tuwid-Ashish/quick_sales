@@ -25,6 +25,9 @@ const orderSchema = new Schema({
   },
   
   shippingAddress:{type:String},
+  city: { type: String },
+  state: { type: String },
+  pincode: { type: String },
 
   orderDate: { 
     type: Date,

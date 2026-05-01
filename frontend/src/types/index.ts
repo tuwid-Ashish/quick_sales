@@ -36,6 +36,7 @@ export interface ProductFormData {
   description?: string;
   category: string;
   stock: number;
+  bulkDiscountPercentage?: number;
   images: string[];
   thumbnails?: string[];
 }
@@ -46,8 +47,11 @@ export interface Orderdata{
   phone:string;
   email:string;
   referral:string| null;
-  address:string
-
+  address:string;
+  city: string;
+  state: string;
+  pincode: string;
+  quantity: number;
 }
   
  

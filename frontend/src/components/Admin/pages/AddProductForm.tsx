@@ -21,6 +21,10 @@ const productSchema = zod.object({
     .int("Stock must be an integer")
     .positive("Stock must be positive")
     .min(1, "At least one unit is required"),
+  bulkDiscountPercentage: zod.number({ invalid_type_error: "Discount must be a number" })
+    .min(0, "Discount cannot be negative")
+    .max(100, "Discount cannot exceed 100%")
+    .optional(),
 });
 
 // Define a type for what is controlled by the form (without images)
@@ -42,6 +46,7 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
     resolver: zodResolver(productSchema),
     defaultValues: {
       category: "quick",
+      bulkDiscountPercentage: 0,
     },
   });
 
@@ -68,6 +73,7 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
             description: productData.description,
             category: productData.category,
             stock: productData.stock,
+            bulkDiscountPercentage: productData.bulkDiscountPercentage || 0,
           });
           // Set images
           // Convert existing images to ProductImage format
@@ -133,9 +139,10 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
     formData.append("description", data.description || "");
     formData.append("category", data.category);
     formData.append("stock", data.stock.toString());
+    formData.append("bulkDiscountPercentage", (data.bulkDiscountPercentage || 0).toString());
 
     if (productId) {
-      formData.append("id", productId);
+      formData.append("_id", productId);
     }
 
     // Handle images
@@ -158,7 +165,8 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
       images: formData.getAll("images") as string[],
       existingImages: formData.getAll("existingImages") as string[],
       description: formData.get("description") as string,
-      _id :formData.get("id") as string,
+      bulkDiscountPercentage: parseInt(formData.get("bulkDiscountPercentage") as string, 10),
+      _id :formData.get("_id") as string,
 
   };
     console.log("my formdata",productData);
@@ -168,7 +176,7 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
     // Call API with formData
     console.log("the detail of method:",apiCall);
     
-    apiCall(productData)
+    apiCall(formData as any)
       .then((response) => {
         // Construct complete product data (including images URLs if needed)
         // Here, for onAddProduct you can merge form input with extra data
@@ -218,6 +226,13 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
             placeholder="Stock"
           />
           {errors.stock && <p className="text-red-500 text-sm">{errors.stock.message}</p>}
+
+          <Input
+            type="number"
+            {...register("bulkDiscountPercentage", { valueAsNumber: true })}
+            placeholder="Bulk Discount Percentage (e.g. 10)"
+          />
+          {errors.bulkDiscountPercentage && <p className="text-red-500 text-sm">{errors.bulkDiscountPercentage.message}</p>}
 
           <Input 
           type="file"

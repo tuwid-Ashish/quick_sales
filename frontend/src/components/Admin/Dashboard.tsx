@@ -16,7 +16,7 @@ import {
   ArrowLeft
 } from "lucide-react"
 import { useAppSelector } from "@/Store/Store"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import AgentsPage from "./pages/AgentsPage"
 
 export default function DashboardPage() {
@@ -31,6 +31,18 @@ export default function DashboardPage() {
       navigate("/")
     }
   },[usertype])
+
+  // E-commerce Mode Toggle State
+  const [isEcommerceMode, setIsEcommerceMode] = useState(() => {
+    return localStorage.getItem('ecommerce_mode_toggle') === 'true';
+  });
+
+  const handleToggleMode = () => {
+    const newValue = !isEcommerceMode;
+    setIsEcommerceMode(newValue);
+    localStorage.setItem('ecommerce_mode_toggle', String(newValue));
+    // Optional: add a toast notification here
+  };
 
   const dashboardCards = [
     { 
@@ -198,6 +210,30 @@ export default function DashboardPage() {
                       <Users className="h-8 w-8 text-blue-600" />
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Store Settings Section */}
+            <div className="mt-8">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Store Settings</h3>
+              <Card className="border-0 shadow-lg bg-white">
+                <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div>
+                    <h4 className="text-lg font-bold text-gray-900">Full E-Commerce Mode</h4>
+                    <p className="text-sm text-gray-600 max-w-md">
+                      If disabled, the site acts as a single-product sales funnel. If enabled, the site transforms into a multi-product storefront.
+                    </p>
+                  </div>
+                  <Button 
+                    onClick={handleToggleMode}
+                    className={`relative w-16 h-8 rounded-full p-1 transition-colors duration-300 focus:outline-none ${isEcommerceMode ? 'bg-green-500' : 'bg-gray-300'}`}
+                    variant="ghost"
+                  >
+                    <span 
+                      className={`inline-block w-6 h-6 bg-white rounded-full shadow transform transition-transform duration-300 ${isEcommerceMode ? 'translate-x-8' : 'translate-x-0'}`} 
+                    />
+                  </Button>
                 </CardContent>
               </Card>
             </div>

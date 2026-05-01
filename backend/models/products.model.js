@@ -26,6 +26,12 @@ const productSchema = new Schema({
         required: true,
         min: 0
     },
+    bulkDiscountPercentage: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 100
+    },
     images: {
         type: [String],
         validate: {

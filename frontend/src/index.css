@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
 
 @import "tailwindcss";
 @plugin "tailwindcss-animate";
@@ -28,71 +29,57 @@
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 8px);
   --font-nunito: "Nunito", sans-serif;
+  --font-display: "Quicksand", sans-serif;
+
+  /* Playful Brand Colors */
+  --color-leaf: #3A8B3C;
+  --color-leaf-light: #52B454;
+  --color-leaf-dark: #266028;
+  --color-sun: #FFC107;
+  --color-sun-light: #FFD54F;
+  --color-soil: #5D4037;
+  --color-cream: #FFF9E6;
+  --color-cream-dark: #F2E9CD;
+  --color-sky: #81D4FA;
+
+  /* Animation */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @layer base {
   :root {
-    --background: 43 78% 97%;
-    --foreground: 139 41% 15%;
+    --background: 45 100% 95%;
+    --foreground: 20 25% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 139 41% 15%;
+    --card-foreground: 20 25% 20%;
  
     --popover: 0 0% 100%;
-    --popover-foreground: 139 41% 15%;
+    --popover-foreground: 20 25% 20%;
  
-    --primary: 132 49% 24%;
+    --primary: 121 41% 39%;
     --primary-foreground: 0 0% 100%;
  
-    --secondary: 43 67% 91%;
-    --secondary-foreground: 139 41% 15%;
+    --secondary: 45 100% 51%;
+    --secondary-foreground: 20 25% 20%;
  
-    --muted: 43 50% 92%;
-    --muted-foreground: 108 9% 41%;
+    --muted: 45 40% 90%;
+    --muted-foreground: 120 8% 40%;
  
-    --accent: 104 44% 94%;
-    --accent-foreground: 132 49% 24%;
+    --accent: 121 41% 94%;
+    --accent-foreground: 121 41% 39%;
  
     --destructive: 0 72% 45%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 42 31% 82%;
-    --input: 42 31% 82%;
-    --ring: 132 49% 24%;
+    --border: 45 30% 85%;
+    --input: 45 30% 85%;
+    --ring: 121 41% 39%;
  
-    --radius: 0.5rem;
-  }
- 
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
- 
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
- 
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
- 
-    --primary: 45 90% 51%;
-    --primary-foreground: 45 90% 98%;
- 
-    --secondary: 142.1 76.2% 36.3%;
-    --secondary-foreground: 0 0% 98%;
- 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
- 
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
- 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
- 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 45 90% 51%;
+    --radius: 1rem; /* More rounded, playful look */
   }
 }
  
@@ -101,8 +88,141 @@
     border-color: hsl(var(--border));
   }
   body {
-    background: hsl(var(--background));
-    color: hsl(var(--foreground));
+    background: var(--color-cream);
+    color: var(--color-soil);
     font-family: 'Nunito', sans-serif;
   }
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-cream);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-leaf-light);
+    border-radius: 999px;
+  }
+}
+
+/* ─── Scroll-triggered animations ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes bounceIn {
+  0% { opacity: 0; transform: scale(0.8); }
+  60% { opacity: 1; transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-60px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(60px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(255, 193, 7, 0); }
+}
+
+/* Animation utility classes */
+.animate-fade-up {
+  animation: fadeUp 0.8s var(--ease-out-expo) both;
+}
+.animate-fade-in {
+  animation: fadeIn 0.6s ease both;
+}
+.animate-bounce-in {
+  animation: bounceIn 0.8s var(--ease-bounce) both;
+}
+.animate-slide-left {
+  animation: slideInLeft 0.8s var(--ease-out-expo) both;
+}
+.animate-slide-right {
+  animation: slideInRight 0.8s var(--ease-out-expo) both;
+}
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+.animate-wiggle {
+  animation: wiggle 2s ease-in-out infinite;
+}
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* Stagger delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+
+/* Blob decorative elements */
+.blob {
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  animation: blobMorph 8s ease-in-out infinite;
+}
+
+@keyframes blobMorph {
+  0%, 100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+  34% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; }
+  67% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; }
+}
+
+/* Gradient text */
+.text-gradient-leaf {
+  background: linear-gradient(135deg, var(--color-leaf), var(--color-leaf-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass effect */
+.glass-light {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid white;
+}
+
+/* Font family helpers */
+.font-display {
+  font-family: "Quicksand", sans-serif;
+}
+.font-nunito {
+  font-family: "Nunito", sans-serif;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

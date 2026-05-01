@@ -27,7 +27,7 @@ const AddSaleProduct = asyncHandler(async (req,res)=>{
             throw new ApiError(400, `Missing required fields: ${missingFields.join(", ")}`);
         }
 
-        const {name,price,description,category,stock} = body
+        const {name,price,description,category,stock,bulkDiscountPercentage} = body
         
         const cloudinaryImages = [];
         for (const upImg of poductImages) {
@@ -49,6 +49,7 @@ const AddSaleProduct = asyncHandler(async (req,res)=>{
             description,
             category,
             stock,
+            bulkDiscountPercentage: bulkDiscountPercentage ? Number(bulkDiscountPercentage) : 0,
             images:cloudinaryImages.filter(url => !url.includes('w_200')), // Assuming thumbnails are identifiable
             thumbnails: cloudinaryImages.filter(url => url.includes('w_200'))
         })
@@ -86,7 +87,7 @@ const EditSaleProduct = asyncHandler(async (req, res) => {
     try {
         console.log("Validated Body:", body);
         
-        const { name, price, description, category, stock, _id, existingImages } = body;
+        const { name, price, description, category, stock, _id, existingImages, bulkDiscountPercentage } = body;
 
         // ✅ Upload new images to Cloudinary
         const cloudinaryimages = await Promise.all(
@@ -117,6 +118,7 @@ const EditSaleProduct = asyncHandler(async (req, res) => {
         product.description = description || product.description;
         product.category = category || product.category;
         product.stock = stock || product.stock;
+        product.bulkDiscountPercentage = bulkDiscountPercentage !== undefined ? Number(bulkDiscountPercentage) : product.bulkDiscountPercentage;
         product.images = finalImages;
 
         await product.save();

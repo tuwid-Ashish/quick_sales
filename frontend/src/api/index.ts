@@ -46,7 +46,7 @@ const Referalvists = (data:string) => {
   return apiClient.get(`/users/referal-vists?${data}`)
 }
 
-const AddProduct = (data:ProductFormData) => {
+const AddProduct = (data:FormData) => {
   return apiClient.post("/admin/add-product",data,{
     headers: {
     'Content-Type': 'multipart/form-data',
@@ -57,7 +57,7 @@ const AddProduct = (data:ProductFormData) => {
 const GetProducts = (offset: number, page: number) => {
   return apiClient.get(`/admin/get-products?offset=${offset}&page=${page}`)
 }
-const EditProduct = (data: ProductFormData) => {
+const EditProduct = (data: FormData) => {
   return apiClient.post("/admin/edit-product", data, {
     headers: {
       'Content-Type': 'multipart/form-data',

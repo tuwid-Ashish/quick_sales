@@ -1,90 +1,70 @@
 import { Link } from "react-router";
-import { Sprout, Mail, Phone, MapPin, ShieldCheck, Truck, CreditCard } from "lucide-react";
+import { Mail, Phone, MapPin, ShieldCheck, Truck, Leaf } from "lucide-react";
 
 function Footer() {
   return (
-    <footer className="bg-[#17381f] font-nunito text-white">
-      <div className="border-b border-white/10 bg-[#1f5b2b]">
-        <div className="container mx-auto grid grid-cols-1 gap-4 px-4 py-6 md:grid-cols-3">
-          {[
-            { icon: ShieldCheck, title: "Secure checkout", text: "Payments handled by Razorpay" },
-            { icon: Truck, title: "Fast dispatch", text: "Packed carefully for gifting" },
-            { icon: CreditCard, title: "UPI and cards", text: "Simple online payment flow" },
-          ].map((item) => (
-            <div key={item.title} className="flex items-center gap-3">
-              <div className="rounded-md bg-white/10 p-3">
-                <item.icon className="h-5 w-5 text-[#f1c24b]" />
-              </div>
-              <div>
-                <p className="font-extrabold">{item.title}</p>
-                <p className="text-sm text-white/70">{item.text}</p>
-              </div>
+    <footer className="relative bg-soil text-cream overflow-hidden border-t-8 border-leaf">
+      {/* Decorative Blob */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-sun/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-leaf/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+
+      {/* Trust strip */}
+      <div className="relative z-10 border-b border-cream/10 bg-soil/50 backdrop-blur-sm">
+        <div className="mx-auto max-w-5xl px-4 py-6">
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-sm font-bold text-cream">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-sun-light" />
+              <span>Secure Payment</span>
             </div>
-          ))}
+            <div className="flex items-center gap-2">
+              <Truck className="h-5 w-5 text-sun-light" />
+              <span>Pan-India Delivery</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Leaf className="h-5 w-5 text-sun-light" />
+              <span>100% Natural Kit</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-md bg-[#f1c24b]">
-                <Sprout className="h-6 w-6 text-[#17381f]" />
-              </div>
-              <div className="leading-none">
-                <span className="block text-2xl font-extrabold">Get Gardening</span>
-                <span className="mt-1 block text-[10px] font-bold uppercase tracking-widest text-white/55">
-                  Kids starter kit
-                </span>
-              </div>
+      {/* Main footer */}
+      <div className="relative z-10 mx-auto max-w-5xl px-4 py-12">
+        <div className="flex flex-col items-center text-center gap-8">
+          {/* Logo */}
+          <Link to="/">
+            <img
+              src="/images/logo.png"
+              alt="Get Gardening"
+              className="h-14 w-auto object-contain brightness-0 invert opacity-80 hover:opacity-100 transition-opacity"
+            />
+          </Link>
+
+          {/* Tagline */}
+          <p className="max-w-md text-base leading-relaxed font-medium text-cream/80 font-nunito">
+            Helping kids grow their first plant — one kit at a time. A premium screen-free activity for curious young minds.
+          </p>
+
+          {/* Contact */}
+          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-cream/80 font-bold">
+            <a href="tel:+919151326317" className="flex items-center gap-2 hover:text-sun-light transition-colors">
+              <Phone className="h-4 w-4 text-sun-light" />
+              +91 915 132 6317
+            </a>
+            <a href="mailto:hello@getgardening.in" className="flex items-center gap-2 hover:text-sun-light transition-colors">
+              <Mail className="h-4 w-4 text-sun-light" />
+              hello@getgardening.in
+            </a>
+            <div className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-sun-light" />
+              Pune, India
             </div>
-            <p className="max-w-sm text-sm leading-7 text-white/70">
-              A premium children&apos;s gardening kit for screen-free learning, parent-child bonding, and first plant care.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-sm font-extrabold uppercase tracking-widest text-[#f1c24b]">The Kit</h3>
-            <ul className="space-y-3 text-sm">
-              <li><Link to="/products" className="text-white/70 transition-colors hover:text-white">Get Gardening Starter Kit</Link></li>
-              <li><Link to="/#inside-kit" className="text-white/70 transition-colors hover:text-white">What&apos;s inside</Link></li>
-              <li><Link to="/#faq" className="text-white/70 transition-colors hover:text-white">Parent FAQ</Link></li>
-            </ul>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-sm font-extrabold uppercase tracking-widest text-[#f1c24b]">Help</h3>
-            <ul className="space-y-3 text-sm">
-              <li><Link to="/about" className="text-white/70 transition-colors hover:text-white">About the brand</Link></li>
-              <li><a href="mailto:hello@getgardening.in" className="text-white/70 transition-colors hover:text-white">Contact support</a></li>
-              <li><a href="tel:+91915132631" className="text-white/70 transition-colors hover:text-white">Order help</a></li>
-            </ul>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-sm font-extrabold uppercase tracking-widest text-[#f1c24b]">Contact</h3>
-            <ul className="space-y-4 text-sm text-white/70">
-              <li className="flex items-start gap-3">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#f1c24b]" />
-                <span>Get Gardening, Pune, India</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone className="h-4 w-4 shrink-0 text-[#f1c24b]" />
-                <a href="tel:+91915132631" className="transition-colors hover:text-white">+91 911 513 2631</a>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail className="h-4 w-4 shrink-0 text-[#f1c24b]" />
-                <a href="mailto:hello@getgardening.in" className="transition-colors hover:text-white">hello@getgardening.in</a>
-              </li>
-            </ul>
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col justify-between gap-4 border-t border-white/10 pt-8 text-xs text-white/50 md:flex-row md:items-center">
-          <p>Copyright {new Date().getFullYear()} Get Gardening. All rights reserved.</p>
-          <div className="flex gap-5">
-            <span>Secure payments through Razorpay</span>
-          </div>
+        {/* Bottom bar */}
+        <div className="mt-12 border-t border-cream/10 pt-8 text-center text-sm font-medium text-cream/50">
+          <p>© {new Date().getFullYear()} Get Gardening. All rights reserved. Payments secured by Razorpay.</p>
         </div>
       </div>
     </footer>

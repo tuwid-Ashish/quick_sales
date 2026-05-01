@@ -24,17 +24,17 @@ export const CreateOrder = async (req, res) => {
 
   try {
     const instance = CreateRazerpayInstance();
-    const { id, name, phone, email, referral, address } = req.body;
+    const { id, name, phone, email, referral, address, city, state, pincode, quantity = 1 } = req.body;
     console.log("the method is sent:",req.body);
     
     // Validate required fields
-    if (!id || !name || !phone || !address) {
+    if (!id || !name || !phone || !address || !city || !state || !pincode) {
       return res
         .status(400)
         .json(
           new ApiError(
             400,
-            "Product ID, customer name, and phone number are required"
+            "Product ID, customer name, phone number, and complete address details are required"
           )
         );
     }
@@ -59,21 +59,33 @@ export const CreateOrder = async (req, res) => {
       }
     }
 
+    // Calculate Discounted Price
+    const numericQty = parseInt(quantity, 10) || 1;
+    let finalAmount = product.price * numericQty;
+
+    // Apply percentage discount if bulkDiscountPercentage exists, is > 0, and user buys more than 1 item
+    if (product.bulkDiscountPercentage && product.bulkDiscountPercentage > 0 && numericQty > 1) {
+      finalAmount = Math.round(finalAmount * (1 - (product.bulkDiscountPercentage / 100)));
+    }
+
     // Create order document first
     const newOrder = await Order.create(
       {
         products: [
           {
             product: product.id,
-            priceAtPurchase: product.price,
-            quantity: 1,
+            priceAtPurchase: product.price, // original price
+            quantity: numericQty,
             name:product.name
           },
         ],
-        totalAmount: product.price,
+        totalAmount: finalAmount,
         referralCode: agent ? referral : undefined, // Only include referralCode if agent is valid
         shop: agent || undefined,
         shippingAddress: address,
+        city,
+        state,
+        pincode,
         customer: {
           name:name|| "Ashish",
           phoneNumber: phone,
@@ -86,7 +98,7 @@ export const CreateOrder = async (req, res) => {
 
     // Create Razorpay order
     const razorpayOptions = {
-      amount: product.price * 100, // Convert to paise
+      amount: finalAmount * 100, // Convert to paise
       currency: "INR",
       receipt: newOrder._id.toString(), // Link Razorpay order to our order
       notes: {

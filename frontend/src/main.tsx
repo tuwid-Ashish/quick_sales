@@ -6,13 +6,10 @@ import './index.css'
 import { Provider } from 'react-redux'
 import { store } from './Store/Store.js'
 import Signupform from './components/Auth/signup_page.tsx'
-// import VerifyEmail from './components/Auth/VerifyEmail.jsx'
 import LoginPage from './components/Auth/login_component.tsx'
 import ResetPassword from './components/Auth/Resetpasword.tsx'
 import AuthLayout from './components/AuthLayout.tsx'
 import ProductsPage from './components/products/list_products.js'
-import AboutPage from './components/Gernal_routes/AboutPage.js'
-// import ProductDetails from './components/products/product_page.js'
 import Generate_qr from './components/Agent/Generate_qr.js'
 import Agent_stats from './components/Agent/Agent_stats.js'
 import Dashboard from './components/Admin/Dashboard.tsx'
@@ -28,6 +25,22 @@ const ProductDetails = lazy(() => import('./components/products/product_page.js'
 
 const queryClient = new QueryClient();
 
+const ProductFallback = () => (
+  <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-forest">
+    <div className="absolute inset-0 flex items-center justify-center">
+      <div className="h-[400px] w-[400px] rounded-full bg-sage/10 blur-[100px]" />
+    </div>
+    <div className="relative flex flex-col items-center gap-8">
+      <img src="/images/logo.png" alt="Get Gardening" className="h-24 w-auto object-contain brightness-0 invert drop-shadow-2xl" />
+      <div className="flex items-center gap-2">
+        <div className="h-2 w-2 rounded-full bg-gold animate-bounce" style={{ animationDelay: '0ms' }} />
+        <div className="h-2 w-2 rounded-full bg-gold animate-bounce" style={{ animationDelay: '150ms' }} />
+        <div className="h-2 w-2 rounded-full bg-gold animate-bounce" style={{ animationDelay: '300ms' }} />
+      </div>
+    </div>
+  </div>
+);
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -40,10 +53,7 @@ const router = createBrowserRouter([
         path: '/products', element: <ProductsPage />
       },
       {
-        path: '/products/:id', element: <Suspense fallback={<div>Loading...</div>}><ProductDetails /></Suspense>
-      },
-      {
-        path: '/about', element: <AboutPage />
+        path: '/products/:id', element: <Suspense fallback={<ProductFallback />}><ProductDetails /></Suspense>
       },
       {
         path: '/payment-status', element: <PaymentStatus />
@@ -59,7 +69,7 @@ const router = createBrowserRouter([
           </AuthLayout>
         ),
         children: [
-          { path: "", element: <Dashboard /> }, // Default dashboard page
+          { path: "", element: <Dashboard /> },
           { path: "products", element: <ProductsPage /> },
           { path: "orders", element: <OrdersPage /> },
           { path: "referrals", element: <ReferralsPage /> },
@@ -89,8 +99,6 @@ const router = createBrowserRouter([
         </AuthLayout>
       },
       { path: '/reset-password', element:<ResetPassword />},
-      // { path: '/verifyEmail', element:<VerifyEmail /> },
-
     ],
   },
 ])
