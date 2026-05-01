@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { ProductFormData, ProductImage } from "@/types";
+import { ProductImage } from "@/types";
 import { AddProduct, EditProduct, GetProductById } from "@/api";
 import {OctagonX} from "lucide-react"
 // Validation Schema using zod for form fields (excluding images)
@@ -157,20 +157,6 @@ export default function AddProductForm({ onAddProduct, productId, isEditing = fa
       formData.append("existingImages", url);
     });
 
-    const productData: ProductFormData = {
-      name: formData.get("name") as string,
-      price: parseFloat(formData.get("price") as string),
-      category: formData.get("category") as string,
-      stock: parseInt(formData.get("stock") as string, 10),
-      images: formData.getAll("images") as string[],
-      existingImages: formData.getAll("existingImages") as string[],
-      description: formData.get("description") as string,
-      bulkDiscountPercentage: parseInt(formData.get("bulkDiscountPercentage") as string, 10),
-      _id :formData.get("_id") as string,
-
-  };
-    console.log("my formdata",productData);
-    // return
     const apiCall = isEditing ? EditProduct : AddProduct;
 
     // Call API with formData

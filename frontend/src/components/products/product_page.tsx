@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { CreateOder, GetProductById, GetProducts } from "@/api";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,25 +14,20 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import {
   BookOpen,
   CheckCircle2,
-  CreditCard,
   Droplets,
   Gift,
   Leaf,
-  Mail,
-  MapPin,
   Package,
-  Phone,
   ShieldCheck,
   ShoppingCart,
   Shovel,
   Sprout,
   Truck,
-  User,
   Star,
   PlayCircle
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+
 import { useQuery } from "@tanstack/react-query";
 
 interface RazorpayOptions {
@@ -116,9 +111,6 @@ const ProductDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [showStickyBuy, setShowStickyBuy] = useState(false);
-
-  // E-commerce Mode Toggle State
-  const isEcommerceMode = localStorage.getItem('ecommerce_mode_toggle') === 'true';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -631,7 +623,7 @@ const ProductDetailPage: React.FC = () => {
             
             <Carousel className="w-full max-w-5xl mx-auto">
               <CarouselContent>
-                {otherProducts.map((prod) => (
+                {otherProducts.map((prod: ProductFormData) => (
                   <CarouselItem key={prod._id} className="md:basis-1/2 lg:basis-1/3 pl-4">
                     <div 
                       className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border-2 border-cream-dark group cursor-pointer h-full flex flex-col"
