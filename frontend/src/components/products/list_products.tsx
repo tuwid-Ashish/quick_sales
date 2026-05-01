@@ -1,218 +1,149 @@
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Star, ArrowRight, Package, Leaf, Sprout } from "lucide-react";
-import {  useLocation, useNavigate } from "react-router"
-import { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { GetProducts } from "@/api";
 import { ProductFormData } from "@/types";
 import { useAppDispatch } from "@/Store/Store";
 import { addrefreral } from "@/Store/ReferalSlice";
-import { Badge } from "@/components/ui/badge";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowRight, CheckCircle2, Gift, Leaf, ShieldCheck, ShoppingCart, Sprout, Truck } from "lucide-react";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router";
 
-interface ProductsPageState {
-  products: ProductFormData[];
-  currentPage: number;
-  totalPages: number;
-  loading: boolean;
-}
+const fallbackImage = "/images/product-sample-image/WhatsApp%20Image%202026-05-01%20at%209.59.59%20AM.jpeg";
 
-const ITEMS_PER_PAGE = 10;
+const getProductImage = (product: ProductFormData) =>
+  product.thumbnails?.[0] || product.images?.[0] || fallbackImage;
 
 const ProductsPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
-   const [state, setState] = useState<ProductsPageState>({
-      products: [],
-      currentPage: 1,
-      totalPages: 1,
-      loading: true,
-    });
-  const fetchProducts = async (page: number) => {
-    try {
-      const response = await GetProducts(ITEMS_PER_PAGE, page);
-      console.log(response);
-      
-      const { products, pagination } = response.data.data;
-      setState(prev => ({
-        ...prev,
-        products,
-        currentPage: pagination.currentPage,
-        totalPages: pagination.totalPages,
-        loading: false,
-      }));
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      setState(prev => ({ ...prev, loading: false }));
-    }
-  };
 
-    // Capture referral_id from the URL and save it in Redux
-    useEffect(() => {
-      const params = new URLSearchParams(location.search);
-      const referral_id = params.get("referral_id");
-  
-      if (referral_id) {
-        dispatch(addrefreral({ referralCode: referral_id }));
-        console.log("Referral ID captured and saved:", referral_id);
-      }
-    }, [location.search, dispatch]);
-  
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["single-product-entry"],
+    queryFn: () => GetProducts(1, 1),
+  });
+
+  const product: ProductFormData | undefined = data?.data?.data?.products?.[0];
+
   useEffect(() => {
-    fetchProducts(state.currentPage);
-  }, [state.currentPage]);
+    const params = new URLSearchParams(location.search);
+    const referral_id = params.get("referral_id");
 
-  if (state.loading) {
+    if (referral_id) {
+      dispatch(addrefreral({ referralCode: referral_id }));
+    }
+  }, [location.search, dispatch]);
+
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#fafdf7] flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-700 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading garden collection...</p>
+      <div className="min-h-screen bg-[#fffaf0] py-12">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 lg:grid-cols-2">
+          <Skeleton className="h-[520px] rounded-xl" />
+          <div className="space-y-5">
+            <Skeleton className="h-8 w-40" />
+            <Skeleton className="h-16 w-4/5" />
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-14 w-48" />
+          </div>
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-[#fafdf7]">
-      {/* Hero Section */}
-      <div className="text-white py-16 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.pexels.com/photos/1456613/pexels-photo-1456613.jpeg?auto=compress&cs=tinysrgb&w=1920&h=500&fit=crop"
-            alt="Garden collection display"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1a3c0a]/90 via-[#2d5016]/80 to-[#1a3c0a]/70" />
-        </div>
-        <div className="container mx-auto px-4 relative">
-          <div className="max-w-3xl mx-auto text-center">
-            <Badge className="bg-lime-400/20 text-lime-200 border-lime-400/30 mb-4">
-              <Sprout className="h-3 w-3 mr-1" />
-              Premium Collection
-            </Badge>
-            <h1 className="text-5xl font-bold mb-4">Our Garden Collection</h1>
-            <p className="text-xl text-green-200/80">
-              Hand-picked gardening kits, organic seeds, and supplies crafted for Indian gardens
-            </p>
-          </div>
+  if (isError || !product) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#fffaf0] px-4 text-center">
+        <div>
+          <p className="text-lg font-extrabold text-[#17381f]">The kit is not available right now.</p>
+          <p className="mt-2 text-[#60705f]">Please check again later or contact support.</p>
         </div>
       </div>
+    );
+  }
 
-      {/* Products Grid */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {state.products.map((product) => (
-            <Card 
-              key={product._id} 
-              className="group hover:shadow-2xl transition-all duration-300 border border-green-100 bg-white overflow-hidden cursor-pointer transform hover:-translate-y-2"
-              onClick={() => navigate(`/products/${product._id}${location.search}`)}
-            >
-              {/* Image Container */}
-              <div className="relative overflow-hidden">
-                <img 
-                  src={product.images[0]} 
-                  alt={product.name} 
-                  className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" 
-                />
-                <div className="absolute top-3 left-3">
-                  <Badge className="bg-white/90 text-green-700 shadow-md border-0 backdrop-blur-sm">
-                    <Leaf className="h-3 w-3 mr-1" />
-                    Organic
-                  </Badge>
-                </div>
-                <div className="absolute top-3 right-3">
-                  <Badge className="bg-green-700 text-white shadow-lg">
-                    <Package className="h-3 w-3 mr-1" />
-                    In Stock
-                  </Badge>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </div>
+  const productPath = `/products/${product._id}${location.search}`;
 
-              {/* Content */}
-              <CardContent className="p-5">
-                <CardTitle className="text-lg font-bold mb-2 line-clamp-1 group-hover:text-green-700 transition-colors">
-                  {product.name}
-                </CardTitle>
-                
-                <p className="text-gray-500 text-sm mb-4 line-clamp-2 h-10">
-                  {product.description && product.description.length > 80
-                    ? `${product.description.slice(0, 80)}...`
-                    : product.description}
-                </p>
+  return (
+    <div className="min-h-screen bg-[#fffaf0] font-nunito text-[#17381f]">
+      <section className="bg-[#f8f1df] py-12">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+          <div className="overflow-hidden rounded-xl border border-[#e4d8ba] bg-white shadow-xl">
+            <img
+              src={getProductImage(product)}
+              alt={product.name}
+              className="h-[420px] w-full object-cover sm:h-[560px]"
+            />
+          </div>
 
-                {/* Rating */}
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
-                      className="h-4 w-4 fill-amber-400 text-amber-400" 
-                    />
-                  ))}
-                  <span className="text-sm text-gray-400 ml-1">(4.8)</span>
-                </div>
+          <div>
+            <Badge className="mb-4 border-[#b8d9b7] bg-white text-[#2d6a3a]">
+              <Sprout className="mr-2 h-3.5 w-3.5" />
+              One complete starter kit
+            </Badge>
+            <h1 className="text-4xl font-extrabold leading-tight text-[#17381f] sm:text-5xl">
+              {product.name}
+            </h1>
+            <p className="mt-4 max-w-2xl text-lg leading-8 text-[#60705f]">
+              {product.description || "A complete hands-on gardening kit designed to help children learn nature through play."}
+            </p>
 
-                {/* Price & Button */}
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-2xl font-bold text-green-800">
-                      ₹{product.price}
-                    </p>
+            <div className="mt-6 rounded-lg border border-[#e4d8ba] bg-white p-6 shadow-sm">
+              <p className="text-sm font-bold uppercase tracking-wider text-[#60705f]">Current price</p>
+              <p className="mt-1 text-5xl font-extrabold text-[#1f5b2b]">Rs. {product.price}</p>
+              <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {["Complete kit", "Screen-free activity", "Gift-ready", "Secure payment"].map((item) => (
+                  <div key={item} className="flex items-center gap-2 text-sm font-bold text-[#425442]">
+                    <CheckCircle2 className="h-4 w-4 text-[#2d6a3a]" />
+                    {item}
                   </div>
-                  <Button 
-                    className="bg-green-700 hover:bg-green-800 shadow-md group-hover:shadow-lg transition-all"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(`/products/${product._id}${location.search}`);
-                    }}
-                  >
-                    <ShoppingCart className="h-4 w-4 mr-1" />
-                    View
-                    <ArrowRight className="h-4 w-4 ml-1" />
-                  </Button>
-                </div>
+                ))}
+              </div>
+              <Button
+                onClick={() => navigate(productPath)}
+                className="mt-6 h-14 w-full rounded-md bg-[#1f5b2b] text-base font-extrabold text-white hover:bg-[#174621] sm:w-auto sm:px-8"
+              >
+                <ShoppingCart className="mr-2 h-5 w-5" />
+                View Details and Buy
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-14">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+          {[
+            { icon: ShieldCheck, title: "Parent-focused", text: "Clear age, safety, and contents information." },
+            { icon: Gift, title: "Gift-ready", text: "A useful activity instead of another passive toy." },
+            { icon: Truck, title: "Fast dispatch", text: "Packed carefully for home delivery." },
+            { icon: Leaf, title: "Nature learning", text: "Hands-on plant care for curious children." },
+          ].map((item) => (
+            <Card key={item.title} className="border-[#e7dfca] bg-white shadow-sm">
+              <CardContent className="p-5">
+                <item.icon className="mb-4 h-6 w-6 text-[#2d6a3a]" />
+                <h2 className="font-extrabold text-[#17381f]">{item.title}</h2>
+                <p className="mt-2 text-sm leading-6 text-[#60705f]">{item.text}</p>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* Pagination */}
-        {state.totalPages > 1 && (
-          <div className="flex justify-center gap-2 mt-12">
-            <Button
-              variant="outline"
-              disabled={state.currentPage === 1}
-              onClick={() => setState(prev => ({ ...prev, currentPage: prev.currentPage - 1 }))}
-              className="hover:bg-green-50 hover:text-green-700 hover:border-green-700"
-            >
-              Previous
-            </Button>
-            
-            {[...Array(state.totalPages)].map((_, index) => (
-              <Button
-                key={index + 1}
-                variant={state.currentPage === index + 1 ? "default" : "outline"}
-                onClick={() => setState(prev => ({ ...prev, currentPage: index + 1 }))}
-                className={state.currentPage === index + 1 
-                  ? "bg-green-700 hover:bg-green-800" 
-                  : "hover:bg-green-50 hover:text-green-700 hover:border-green-700"}
-              >
-                {index + 1}
-              </Button>
-            ))}
-            
-            <Button
-              variant="outline"
-              disabled={state.currentPage === state.totalPages}
-              onClick={() => setState(prev => ({ ...prev, currentPage: prev.currentPage + 1 }))}
-              className="hover:bg-green-50 hover:text-green-700 hover:border-green-700"
-            >
-              Next
+        <div className="mt-12 rounded-xl bg-[#17381f] p-8 text-white">
+          <div className="flex flex-col justify-between gap-5 md:flex-row md:items-center">
+            <div>
+              <h2 className="text-2xl font-extrabold">Ready to start your child&apos;s first plant?</h2>
+              <p className="mt-2 text-white/75">The next page shows the full product gallery, kit contents, FAQ, and checkout.</p>
+            </div>
+            <Button onClick={() => navigate(productPath)} className="h-12 rounded-md bg-[#f1c24b] px-6 font-extrabold text-[#17381f] hover:bg-[#ffd66a]">
+              Continue
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
-        )}
-      </div>
+        </div>
+      </section>
     </div>
   );
 };

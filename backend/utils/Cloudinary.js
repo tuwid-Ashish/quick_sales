@@ -26,14 +26,15 @@ async function checkCloudinary() {
 
 // checkCloudinary();
 
-const uploadOncloudinary = async (loacalFilePath)=>{
+const uploadOncloudinary = async (loacalFilePath, options = {})=>{
     console.log(loacalFilePath);
     try {
     console.log(CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET,process.env.CLOUDINARY_CLOUD_NAME);
 
         if(!loacalFilePath) return null
       const respone =  await  cloudinary.uploader.upload(loacalFilePath,{
-            resource_type: "auto"
+            resource_type: "auto",
+            ...options
         })
         console.log(`file uploaded on cloudinary : ${respone.url}`);
         fs.unlinkSync(loacalFilePath)

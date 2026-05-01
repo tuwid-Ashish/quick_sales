@@ -37,6 +37,7 @@ export interface ProductFormData {
   category: string;
   stock: number;
   images: string[];
+  thumbnails?: string[];
 }
 
 export interface Orderdata{

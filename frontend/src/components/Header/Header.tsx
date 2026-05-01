@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Menu, Leaf, User, LogOut, QrCode, LayoutDashboard, Home, Info, Sprout, ShoppingBag } from "lucide-react";
+import { Menu, LogOut, QrCode, LayoutDashboard, Home, HelpCircle, Sprout, ShoppingBag, ShieldCheck, Package } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/Store/Store";
 import { logoutUser } from "@/api";
 import { logout } from "@/Store/AuthSlice";
@@ -18,12 +18,10 @@ const Navbar: React.FC = () => {
   const usertype = useAppSelector((state) => state.Auth.user);
   const navigator = useNavigate();
   const dispatch = useAppDispatch();
- 
+
   const logoutapp = () => {
-    console.log("logout");
     logoutUser()
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         dispatch(logout());
         navigator("/login");
       })
@@ -33,154 +31,142 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-green-100 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo & Menu */}
+    <nav className="sticky top-0 z-50 border-b border-[#e7dfca] bg-white/95 font-nunito shadow-sm backdrop-blur-md">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-20 items-center justify-between gap-4">
           <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="bg-gradient-to-br from-[#2d5016] to-[#3a6b1e] p-2 rounded-xl group-hover:scale-110 transition-transform shadow-sm">
-                <Leaf className="h-5 w-5 text-lime-300" />
+            <Link to="/" className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-md bg-[#1f5b2b] shadow-sm">
+                <Sprout className="h-6 w-6 text-white" />
               </div>
-              <div className="flex flex-col leading-none">
-                <span className="text-xl font-extrabold text-[#2d5016] tracking-tight">
-                  GetGardening
-                </span>
-                <span className="text-[10px] text-green-600/70 font-medium tracking-widest uppercase">
-                  Grow · Nurture · Bloom
+              <div className="leading-none">
+                <span className="block text-2xl font-extrabold tracking-normal text-[#17381f]">Get Gardening</span>
+                <span className="mt-1 block text-[10px] font-bold uppercase tracking-widest text-[#60705f]">
+                  Kids starter kit
                 </span>
               </div>
             </Link>
 
-            <div className="hidden md:flex items-center gap-1">
+            <div className="hidden items-center gap-1 md:flex">
               <Link to="/">
-                <Button variant="ghost" className="gap-2 text-gray-700 hover:bg-green-50 hover:text-green-800 font-medium">
+                <Button variant="ghost" className="gap-2 rounded-md font-bold text-[#425442] hover:bg-[#eef7eb] hover:text-[#1f5b2b]">
                   <Home className="h-4 w-4" />
                   Home
                 </Button>
               </Link>
-              <Link to="/products">
-                <Button variant="ghost" className="gap-2 text-gray-700 hover:bg-green-50 hover:text-green-800 font-medium">
-                  <Sprout className="h-4 w-4" />
-                  Garden Kits
+              <Link to="/#inside-kit">
+                <Button variant="ghost" className="gap-2 rounded-md font-bold text-[#425442] hover:bg-[#eef7eb] hover:text-[#1f5b2b]">
+                  <Package className="h-4 w-4" />
+                  What's Inside
                 </Button>
               </Link>
-              <Link to="/about">
-                <Button variant="ghost" className="gap-2 text-gray-700 hover:bg-green-50 hover:text-green-800 font-medium">
-                  <Info className="h-4 w-4" />
-                  Our Story
+              <Link to="/#faq">
+                <Button variant="ghost" className="gap-2 rounded-md font-bold text-[#425442] hover:bg-[#eef7eb] hover:text-[#1f5b2b]">
+                  <HelpCircle className="h-4 w-4" />
+                  FAQ
                 </Button>
               </Link>
             </div>
           </div>
 
-          {/* Authentication & Profile */}
           <div className="flex items-center gap-3">
+            <div className="hidden items-center gap-2 rounded-md bg-[#fffaf0] px-3 py-2 text-xs font-bold text-[#425442] lg:flex">
+              <ShieldCheck className="h-4 w-4 text-[#2d6a3a]" />
+              Secure checkout
+            </div>
             {!Status ? (
-              <div className="hidden md:flex gap-3">
-                <Link to="/signup">
-                  <Button variant="outline" className="border-green-700 text-green-800 hover:bg-green-50">
-                    Sign Up
-                  </Button>
-                </Link>
-                <Link to="/login">
-                  <Button className="bg-[#2d5016] hover:bg-[#3a6b1e] text-white">
-                    Login
+              <div className="hidden gap-3 md:flex">
+                <Link to="/products">
+                  <Button className="rounded-md bg-[#1f5b2b] px-5 font-extrabold text-white hover:bg-[#174621]">
+                    Buy Kit
                   </Button>
                 </Link>
               </div>
             ) : (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full ring-2 ring-green-200 hover:ring-green-300">
-                    <Avatar className="h-10 w-10">
+                  <Button variant="ghost" className="relative h-11 w-11 rounded-full ring-2 ring-[#b8d9b7] ring-offset-2">
+                    <Avatar className="h-11 w-11">
                       <AvatarImage
-                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=User"
+                        src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${usertype?.username || "User"}`}
                         alt="Profile"
                       />
-                      <AvatarFallback className="bg-[#2d5016] text-lime-100">
+                      <AvatarFallback className="bg-[#1f5b2b] font-bold text-white">
                         {usertype?.username?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <div className="flex items-center gap-2 p-2">
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-[#2d5016] text-lime-100 text-sm">
+                <DropdownMenuContent align="end" className="w-56 rounded-lg shadow-lg">
+                  <div className="flex items-center gap-3 p-2">
+                    <Avatar className="h-9 w-9">
+                      <AvatarFallback className="bg-[#1f5b2b] text-sm font-bold text-white">
                         {usertype?.username?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium">{usertype?.username}</p>
-                      <p className="text-xs text-gray-500">{usertype?.email}</p>
+                    <div className="flex min-w-0 flex-col space-y-1">
+                      <p className="truncate text-sm font-bold text-[#17381f]">{usertype?.username}</p>
+                      <p className="truncate text-xs text-[#60705f]">{usertype?.email}</p>
                     </div>
                   </div>
                   <DropdownMenuSeparator />
                   {usertype?.role?.toLowerCase() !== "agent" ? (
                     <DropdownMenuItem asChild>
-                      <Link to="/dashboard" className="flex items-center gap-2 cursor-pointer">
+                      <Link to="/dashboard" className="flex cursor-pointer items-center gap-2 rounded-md">
                         <LayoutDashboard className="h-4 w-4" />
                         Dashboard
                       </Link>
                     </DropdownMenuItem>
                   ) : (
                     <DropdownMenuItem asChild>
-                      <Link to={`agent/${usertype.username}/generateQR`} className="flex items-center gap-2 cursor-pointer">
+                      <Link to={`agent/${usertype.username}/generateQR`} className="flex cursor-pointer items-center gap-2 rounded-md">
                         <QrCode className="h-4 w-4" />
                         Generate QR
                       </Link>
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logoutapp} className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer">
-                    <LogOut className="h-4 w-4 mr-2" />
+                  <DropdownMenuItem onClick={logoutapp} className="cursor-pointer rounded-md text-red-600 focus:bg-red-50 focus:text-red-600">
+                    <LogOut className="mr-2 h-4 w-4" />
                     Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
 
-            {/* Mobile Menu */}
             <div className="md:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="hover:bg-green-50">
-                    <Menu className="h-6 w-6" />
+                  <Button variant="ghost" size="icon" className="rounded-md hover:bg-[#eef7eb]">
+                    <Menu className="h-6 w-6 text-[#17381f]" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-56 rounded-lg shadow-lg">
                   <DropdownMenuItem asChild>
-                    <Link to="/" className="flex items-center gap-2 cursor-pointer">
+                    <Link to="/" className="flex cursor-pointer items-center gap-2 rounded-md">
                       <Home className="h-4 w-4" />
                       Home
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/products" className="flex items-center gap-2 cursor-pointer">
-                      <ShoppingBag className="h-4 w-4" />
-                      Products
+                    <Link to="/#inside-kit" className="flex cursor-pointer items-center gap-2 rounded-md">
+                      <Package className="h-4 w-4" />
+                      What's Inside
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/about" className="flex items-center gap-2 cursor-pointer">
-                      <Info className="h-4 w-4" />
-                      About
+                    <Link to="/#faq" className="flex cursor-pointer items-center gap-2 rounded-md">
+                      <HelpCircle className="h-4 w-4" />
+                      FAQ
                     </Link>
                   </DropdownMenuItem>
                   {!Status ? (
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
-                        <Link to="/signup" className="flex items-center gap-2 cursor-pointer">
-                          <User className="h-4 w-4" />
-                          Sign Up
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link to="/login" className="flex items-center gap-2 cursor-pointer">
-                          <User className="h-4 w-4" />
-                          Login
+                        <Link to="/products" className="flex cursor-pointer items-center gap-2 rounded-md">
+                          <ShoppingBag className="h-4 w-4" />
+                          Buy Kit
                         </Link>
                       </DropdownMenuItem>
                     </>
@@ -189,21 +175,21 @@ const Navbar: React.FC = () => {
                       <DropdownMenuSeparator />
                       {usertype?.role?.toLowerCase() !== "agent" ? (
                         <DropdownMenuItem asChild>
-                          <Link to="/dashboard" className="flex items-center gap-2 cursor-pointer">
+                          <Link to="/dashboard" className="flex cursor-pointer items-center gap-2 rounded-md">
                             <LayoutDashboard className="h-4 w-4" />
                             Dashboard
                           </Link>
                         </DropdownMenuItem>
                       ) : (
                         <DropdownMenuItem asChild>
-                          <Link to={`agent/${usertype.username}/generateQR`} className="flex items-center gap-2 cursor-pointer">
+                          <Link to={`agent/${usertype.username}/generateQR`} className="flex cursor-pointer items-center gap-2 rounded-md">
                             <QrCode className="h-4 w-4" />
                             Generate QR
                           </Link>
                         </DropdownMenuItem>
                       )}
-                      <DropdownMenuItem onClick={logoutapp} className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer">
-                        <LogOut className="h-4 w-4 mr-2" />
+                      <DropdownMenuItem onClick={logoutapp} className="cursor-pointer rounded-md text-red-600 focus:bg-red-50 focus:text-red-600">
+                        <LogOut className="mr-2 h-4 w-4" />
                         Logout
                       </DropdownMenuItem>
                     </>

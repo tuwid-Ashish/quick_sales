@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client'
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import App from './App.jsx'
 import { RouterProvider, createBrowserRouter } from 'react-router'
 import './index.css'
@@ -12,7 +12,7 @@ import ResetPassword from './components/Auth/Resetpasword.tsx'
 import AuthLayout from './components/AuthLayout.tsx'
 import ProductsPage from './components/products/list_products.js'
 import AboutPage from './components/Gernal_routes/AboutPage.js'
-import ProductDetails from './components/products/product_page.js'
+// import ProductDetails from './components/products/product_page.js'
 import Generate_qr from './components/Agent/Generate_qr.js'
 import Agent_stats from './components/Agent/Agent_stats.js'
 import Dashboard from './components/Admin/Dashboard.tsx'
@@ -22,7 +22,11 @@ import PaymentStatus from './components/products/checkout_page.tsx'
 import AgentsPage from './components/Admin/pages/AgentsPage.tsx'
 import ShopStats from './components/products/ShopStats.tsx'
 import HomePage from './components/Home/HomePage.tsx'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
+const ProductDetails = lazy(() => import('./components/products/product_page.js'));
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -36,7 +40,7 @@ const router = createBrowserRouter([
         path: '/products', element: <ProductsPage />
       },
       {
-        path: '/products/:id', element: <ProductDetails />
+        path: '/products/:id', element: <Suspense fallback={<div>Loading...</div>}><ProductDetails /></Suspense>
       },
       {
         path: '/about', element: <AboutPage />
@@ -93,8 +97,10 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <RouterProvider router={router} />
-      </Provider> 
+      </Provider>
+    </QueryClientProvider>
   </React.StrictMode>,
 )

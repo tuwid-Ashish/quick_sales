@@ -33,6 +33,14 @@ const AddSaleProduct = asyncHandler(async (req,res)=>{
         for (const upImg of poductImages) {
             const result = await uploadOncloudinary(upImg);
             cloudinaryImages.push(result.url);
+
+            // Create a thumbnail
+            const thumbnailResult = await uploadOncloudinary(upImg, {
+                width: 200,
+                height: 200,
+                crop: "fill"
+            });
+            cloudinaryImages.push(thumbnailResult.url); // You might want to store this separately
         }
 
         const product = new Product({
@@ -41,7 +49,8 @@ const AddSaleProduct = asyncHandler(async (req,res)=>{
             description,
             category,
             stock,
-            images:cloudinaryImages
+            images:cloudinaryImages.filter(url => !url.includes('w_200')), // Assuming thumbnails are identifiable
+            thumbnails: cloudinaryImages.filter(url => url.includes('w_200'))
         })
         await product.save()
         console.log("the product",product);

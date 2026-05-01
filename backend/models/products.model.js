@@ -36,6 +36,16 @@ const productSchema = new Schema({
             message: props => `${props.value} is not a valid image URL!`
         }
     },
+    thumbnails: {
+        type: [String],
+        validate: {
+            validator: function(v) {
+                // Accept any valid HTTP/HTTPS URL for images (Cloudinary, etc.)
+                return v.every(url => /^https?:\/\/.+/.test(url));
+            },
+            message: props => `${props.value} is not a valid image URL!`
+        }
+    }
 },{timestamps:true});
 
 const Product = model('Product', productSchema);
