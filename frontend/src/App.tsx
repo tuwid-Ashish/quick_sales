@@ -3,17 +3,26 @@ import Footer from "./components/Footer/Footer.tsx";
 import { Outlet } from "react-router";
 import "./App.css";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 import { useAppDispatch, useAppSelector } from '@/Store/Store'
 import { login, logout } from "./Store/AuthSlice";
 import { getCurrentUser } from "./api/index.ts";
 
 function App() {
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const userdata = useAppSelector((state) => state.Auth.user);
   console.log("Authstatus in app", userdata);
+  const isPaymentStatusPage = location.pathname === '/payment-status';
 
   useEffect(() => {
+    if (isPaymentStatusPage) {
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
     getCurrentUser()
       .then((res) => {
         console.log(res);
@@ -27,7 +36,7 @@ function App() {
         console.log(`error while fetching user ${err}`);
       })
       .finally(() => setLoading(false));
-  }, [dispatch]);
+  }, [dispatch, isPaymentStatusPage]);
 
   if (loading) {
     return (
@@ -62,12 +71,12 @@ function App() {
   }
 
   return (
-    <div className="w-full bg-cream">
-      <Header />
+    <div className="w-full bg-cream min-h-screen">
+      {!isPaymentStatusPage && <Header />}
       <main className="min-h-screen">
         <Outlet />
       </main>
-      <Footer />
+      {!isPaymentStatusPage && <Footer />}
     </div>
   );
 }
