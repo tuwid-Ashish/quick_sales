@@ -16,7 +16,9 @@ export default defineConfig({
   },
   build: {
     // Optimize bundle size
-    minify: 'terser',
+    // Use esbuild minifier on Vercel (no extra dependency required).
+    // If you prefer terser, install it with `npm i -D terser`.
+    minify: 'esbuild',
     target: 'esnext',
     
     // Code splitting strategy
