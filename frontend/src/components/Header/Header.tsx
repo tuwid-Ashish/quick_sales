@@ -15,7 +15,7 @@ import { logout } from "@/Store/AuthSlice";
 import { useEffect, useState } from "react";
 
 const Navbar: React.FC = () => {
-  const Status = useAppSelector((state) => state.Auth.status);
+  // const Status = useAppSelector((state) => state.Auth.status);
   const usertype = useAppSelector((state) => state.Auth.user);
   const navigator = useNavigate();
   const dispatch = useAppDispatch();

@@ -4,11 +4,11 @@
  */
 
 // List of image domains that are trusted for lazy loading
-const TRUSTED_DOMAINS = [
-  'images.unsplash.com',
-  'res.cloudinary.com',
-  'cdn.example.com',
-];
+// const TRUSTED_DOMAINS = [
+//   'images.unsplash.com',
+//   'res.cloudinary.com',
+//   'cdn.example.com',
+// ];
 
 /**
  * Normalize image URL with optimization parameters
