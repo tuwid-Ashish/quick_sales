@@ -36,7 +36,7 @@ export function LoginForm({
       loginUser(data).then((res) => {
         console.log(res);
         dispatch(login(res.data.data));
-        navigate("/");
+        navigate("/dashboard");
         getCurrentUser()
         .then((res) => {
           console.log("what we get response",res);

@@ -14,4 +14,22 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    // Optimize bundle size
+    minify: 'terser',
+    target: 'esnext',
+    
+    // Code splitting strategy
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Separate vendor chunks for better caching
+          'react-vendor': ['react', 'react-dom', 'react-router'],
+          'ui-vendor': ['@radix-ui/react-dropdown-menu', '@radix-ui/react-avatar'],
+          'data': ['@tanstack/react-query'],
+          'utils': ['axios', 'lucide-react'],
+        }
+      }
+    }
+  }
 })

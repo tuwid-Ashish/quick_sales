@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { GetProducts } from "@/api";
 import { ProductFormData } from "@/types";
@@ -6,13 +6,15 @@ import { useAppDispatch } from "@/Store/Store";
 import { addrefreral } from "@/Store/ReferalSlice";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, ArrowRight } from "lucide-react";
+import { ProductGridSkeleton } from "@/components/Skeletons/ProductSkeleton";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
   const [featuredProducts, setFeaturedProducts] = useState<ProductFormData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const redirectAttempted = useRef(false);
 
   // E-commerce Mode Toggle State
   const isEcommerceMode = localStorage.getItem('ecommerce_mode_toggle') === 'true';
@@ -26,6 +28,7 @@ const HomePage = () => {
     }
   }, [location.search, dispatch]);
 
+  // Fetch products in background - non-blocking
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
@@ -34,7 +37,7 @@ const HomePage = () => {
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
-        setLoading(false);
+        setIsLoadingProducts(false);
       }
     };
     fetchFeaturedProducts();
@@ -43,45 +46,15 @@ const HomePage = () => {
   const primaryProduct = featuredProducts[0];
   const productPath = primaryProduct ? `/products/${primaryProduct._id}${location.search}` : `/products${location.search}`;
 
-  // Funnel logic: If not in e-commerce mode, redirect to the primary product
+  // Funnel logic: If not in e-commerce mode, redirect after products load
   useEffect(() => {
-    if (!loading && !isEcommerceMode && primaryProduct) {
+    if (!isLoadingProducts && !isEcommerceMode && primaryProduct && !redirectAttempted.current) {
+      redirectAttempted.current = true;
       navigate(productPath, { replace: true });
     }
-  }, [loading, isEcommerceMode, primaryProduct, navigate, productPath]);
+  }, [isLoadingProducts, isEcommerceMode, primaryProduct, navigate, productPath]);
 
-  // Loading State
-  if (loading || (!isEcommerceMode && primaryProduct)) {
-    return (
-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-sky overflow-hidden">
-        {/* Playful background elements */}
-        <div className="absolute top-10 left-10 w-32 h-32 bg-white/20 rounded-full blur-2xl animate-float" />
-        <div className="absolute bottom-10 right-10 w-48 h-48 bg-sun/30 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
-
-        <div className="relative flex flex-col items-center gap-8 z-10">
-          <div className="bg-white p-6 rounded-[2rem] shadow-xl transform rotate-[-2deg] animate-bounce-in border-4 border-white/50">
-            <img
-              src="/images/logo.png"
-              alt="Get Gardening"
-              className="h-24 max-w-[280px] w-auto object-contain sm:h-28"
-            />
-          </div>
-
-          <div className="flex items-center gap-3 bg-white/50 backdrop-blur-md px-6 py-3 rounded-full shadow-sm">
-            <div className="h-3 w-3 rounded-full bg-leaf animate-bounce" style={{ animationDelay: '0ms' }} />
-            <div className="h-3 w-3 rounded-full bg-sun animate-bounce" style={{ animationDelay: '150ms' }} />
-            <div className="h-3 w-3 rounded-full bg-leaf-light animate-bounce" style={{ animationDelay: '300ms' }} />
-          </div>
-
-          <p className="text-lg font-bold tracking-wide text-soil font-display bg-white/50 backdrop-blur-md px-6 py-2 rounded-full shadow-sm">
-            Preparing your garden...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // Full E-commerce Mode Render
+  // Full E-commerce Mode Render - Show immediately with skeleton while loading
   return (
     <div className="min-h-screen bg-cream font-nunito pt-16">
       
@@ -92,6 +65,7 @@ const HomePage = () => {
             src="https://images.unsplash.com/photo-1599824247547-8cfb62e4f0be?q=80&w=2069&auto=format&fit=crop" 
             alt="Kids gardening" 
             className="w-full h-full object-cover opacity-30 mix-blend-overlay" 
+            loading="lazy"
           />
         </div>
         
@@ -130,7 +104,10 @@ const HomePage = () => {
             <div className="h-1 w-24 bg-leaf mx-auto rounded-full" />
           </div>
 
-          {featuredProducts.length === 0 ? (
+          {isLoadingProducts ? (
+            // Show skeleton while loading
+            <ProductGridSkeleton count={12} />
+          ) : featuredProducts.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-cream-dark">
               <p className="text-2xl font-display font-bold text-soil mb-2">No kits available yet!</p>
               <p className="text-soil/70">Check back soon for new gardening adventures.</p>
@@ -140,7 +117,7 @@ const HomePage = () => {
               {featuredProducts.map((prod) => (
                 <div 
                   key={prod._id} 
-                  className="bg-white rounded-[2rem] overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border-2 border-cream-dark group cursor-pointer"
+                  className="bg-white rounded-[2rem] overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border-2 border-cream-dark group cursor-pointer animate-fade-up"
                   onClick={() => navigate(`/products/${prod._id}${location.search}`)}
                 >
                   <div className="relative aspect-square overflow-hidden bg-cream-dark">
@@ -148,6 +125,7 @@ const HomePage = () => {
                       src={prod.thumbnails?.[0] || prod.images?.[0] || "/images/product-sample-image/WhatsApp Image 2026-05-01 at 9.59.59 AM.jpeg"} 
                       alt={prod.name} 
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      loading="lazy"
                     />
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-leaf font-bold text-sm shadow-sm">
                       Kids Favorite
@@ -174,6 +152,6 @@ const HomePage = () => {
 
     </div>
   );
-};
-
+                  
+}
 export default HomePage;

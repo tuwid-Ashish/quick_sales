@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { Mail, Phone, MapPin, ShieldCheck, Truck, Leaf } from "lucide-react";
-
+import { CONTACT } from "@/constants";
 function Footer() {
   return (
     <footer className="relative bg-soil text-cream overflow-hidden border-t-8 border-leaf">
@@ -42,22 +42,22 @@ function Footer() {
 
           {/* Tagline */}
           <p className="max-w-md text-base leading-relaxed font-medium text-cream/80 font-nunito">
-            Helping kids grow their first plant — one kit at a time. A premium screen-free activity for curious young minds.
+            Helping kids grow their first plant one kit at a time. A premium screen-free activity for curious young minds.
           </p>
 
           {/* Contact */}
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-cream/80 font-bold">
-            <a href="tel:+919151326317" className="flex items-center gap-2 hover:text-sun-light transition-colors">
+            <a href={`tel:${CONTACT.PHONE}`} className="flex items-center gap-2 hover:text-sun-light transition-colors">
               <Phone className="h-4 w-4 text-sun-light" />
-              +91 915 132 6317
+              {CONTACT.PHONE}
             </a>
-            <a href="mailto:hello@getgardening.in" className="flex items-center gap-2 hover:text-sun-light transition-colors">
+            <a href={`mailto:${CONTACT.EMAIL}`} className="flex items-center gap-2 hover:text-sun-light transition-colors">
               <Mail className="h-4 w-4 text-sun-light" />
-              hello@getgardening.in
+              {CONTACT.EMAIL}
             </a>
             <div className="flex items-center gap-2">
               <MapPin className="h-4 w-4 text-sun-light" />
-              Pune, India
+             {CONTACT.address}
             </div>
           </div>
         </div>

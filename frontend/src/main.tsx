@@ -10,32 +10,33 @@ import LoginPage from './components/Auth/login_component.tsx'
 import ResetPassword from './components/Auth/Resetpasword.tsx'
 import AuthLayout from './components/AuthLayout.tsx'
 import ProductsPage from './components/products/list_products.js'
-import Generate_qr from './components/Agent/Generate_qr.js'
-import Agent_stats from './components/Agent/Agent_stats.js'
-import Dashboard from './components/Admin/Dashboard.tsx'
-import OrdersPage from './components/Admin/pages/OrdersPage.tsx'
-import ReferralsPage from './components/Admin/pages/ReferralsPage.tsx'
-import PaymentStatus from './components/products/checkout_page.tsx'
-import AgentsPage from './components/Admin/pages/AgentsPage.tsx'
-import ShopStats from './components/products/ShopStats.tsx'
 import HomePage from './components/Home/HomePage.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
+// Lazy load heavy components for better initial load
 const ProductDetails = lazy(() => import('./components/products/product_page.js'));
+const Dashboard = lazy(() => import('./components/Admin/Dashboard.tsx'));
+const OrdersPage = lazy(() => import('./components/Admin/pages/OrdersPage.tsx'));
+const ReferralsPage = lazy(() => import('./components/Admin/pages/ReferralsPage.tsx'));
+const AgentsPage = lazy(() => import('./components/Admin/pages/AgentsPage.tsx'));
+const Generate_qr = lazy(() => import('./components/Agent/Generate_qr.js'));
+const Agent_stats = lazy(() => import('./components/Agent/Agent_stats.js'));
+const PaymentStatus = lazy(() => import('./components/products/checkout_page.tsx'));
+const ShopStats = lazy(() => import('./components/products/ShopStats.tsx'));
 
 const queryClient = new QueryClient();
 
-const ProductFallback = () => (
-  <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-forest">
-    <div className="absolute inset-0 flex items-center justify-center">
-      <div className="h-[400px] w-[400px] rounded-full bg-sage/10 blur-[100px]" />
-    </div>
-    <div className="relative flex flex-col items-center gap-8">
-      <img src="/images/logo.png" alt="Get Gardening" className="h-24 w-auto object-contain brightness-0 invert drop-shadow-2xl" />
-      <div className="flex items-center gap-2">
-        <div className="h-2 w-2 rounded-full bg-gold animate-bounce" style={{ animationDelay: '0ms' }} />
-        <div className="h-2 w-2 rounded-full bg-gold animate-bounce" style={{ animationDelay: '150ms' }} />
-        <div className="h-2 w-2 rounded-full bg-gold animate-bounce" style={{ animationDelay: '300ms' }} />
+// Loading fallback component
+const LoadingFallback = () => (
+  <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-sky overflow-hidden">
+    <div className="absolute top-10 left-10 w-32 h-32 bg-white/20 rounded-full blur-2xl animate-float" />
+    <div className="absolute bottom-10 right-10 w-48 h-48 bg-sun/30 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
+    <div className="relative flex flex-col items-center gap-8 z-10">
+      <img src="/images/logo.png" alt="Get Gardening" className="h-24 w-auto object-contain drop-shadow-lg" />
+      <div className="flex items-center gap-3 bg-white/50 backdrop-blur-md px-6 py-3 rounded-full shadow-sm">
+        <div className="h-3 w-3 rounded-full bg-leaf animate-bounce" style={{ animationDelay: '0ms' }} />
+        <div className="h-3 w-3 rounded-full bg-sun animate-bounce" style={{ animationDelay: '150ms' }} />
+        <div className="h-3 w-3 rounded-full bg-leaf-light animate-bounce" style={{ animationDelay: '300ms' }} />
       </div>
     </div>
   </div>
@@ -53,39 +54,41 @@ const router = createBrowserRouter([
         path: '/products', element: <ProductsPage />
       },
       {
-        path: '/products/:id', element: <Suspense fallback={<ProductFallback />}><ProductDetails /></Suspense>
+        path: '/products/:id', element: <Suspense fallback={<LoadingFallback />}><ProductDetails /></Suspense>
       },
       {
-        path: '/payment-status', element: <PaymentStatus />
+        path: '/payment-status', element: <Suspense fallback={<LoadingFallback />}><PaymentStatus /></Suspense>
       },
       {
-        path: '/shop-status', element: <ShopStats />
+        path: '/shop-status', element: <Suspense fallback={<LoadingFallback />}><ShopStats /></Suspense>
       },
       {
         path: "/dashboard/*",
         element: (
           <AuthLayout authentication>
-            <Dashboard />
+            <Suspense fallback={<LoadingFallback />}>
+              <Dashboard />
+            </Suspense>
           </AuthLayout>
         ),
         children: [
-          { path: "", element: <Dashboard /> },
+          { path: "", element: <Suspense fallback={<LoadingFallback />}><Dashboard /></Suspense> },
           { path: "products", element: <ProductsPage /> },
-          { path: "orders", element: <OrdersPage /> },
-          { path: "referrals", element: <ReferralsPage /> },
-          { path: "agents", element: <AgentsPage /> },
+          { path: "orders", element: <Suspense fallback={<LoadingFallback />}><OrdersPage /></Suspense> },
+          { path: "referrals", element: <Suspense fallback={<LoadingFallback />}><ReferralsPage /></Suspense> },
+          { path: "agents", element: <Suspense fallback={<LoadingFallback />}><AgentsPage /></Suspense> },
         ],
       },
       {
         path: "/agent/:id/stats",
         element: <AuthLayout authentication>
-           <Agent_stats/>
+           <Suspense fallback={<LoadingFallback />}><Agent_stats /></Suspense>
         </AuthLayout>
       },
       {
         path: "/agent/:id/generateQR",
         element: <AuthLayout authentication>
-          <Generate_qr/>
+          <Suspense fallback={<LoadingFallback />}><Generate_qr /></Suspense>
         </AuthLayout>
       },
       {

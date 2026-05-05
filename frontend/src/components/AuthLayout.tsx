@@ -15,12 +15,14 @@ const Protected: React.FC<AuthLayoutProps> = ({ children, authentication = true 
     useEffect(() => {
         console.log("Authstatus", Authstatus);
         
-        if (authentication && Authstatus !== authentication) {
-            navigate("/Login")
+        // Protected routes: if authentication is required and user is not authenticated, send to login
+        if (authentication && !Authstatus) {
+            navigate("/login");
         }
-        else if (!authentication && Authstatus !== authentication) {
-            navigate("/")
-        } setLoader(false)
+
+        // Public routes (authentication === false) should NOT auto-redirect to `/`.
+        // This allows visiting `/login` or other public pages even if auth state is pending.
+        setLoader(false);
     }, [Authstatus, navigate, authentication])
     return loader?<h1>Loading...</h1>:<>
     {children}

@@ -21,6 +21,9 @@ const Navbar: React.FC = () => {
   const dispatch = useAppDispatch();
   const [scrolled, setScrolled] = useState(false);
 
+  // DISABLED: Auth check - always show Buy Now button for now
+  // const authDisabled = true; // Set to false to re-enable auth check
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -61,7 +64,8 @@ const Navbar: React.FC = () => {
 
           {/* Right side */}
           <div className="flex items-center gap-3">
-            {!Status ? (
+            {/* DISABLED: Auth check - always show Buy Now button */}
+            {true ? ( // Changed from !Status to true to disable auth check
               <>
                 {/* Buy Now CTA */}
                 <Link to="/products">
@@ -109,7 +113,7 @@ const Navbar: React.FC = () => {
                     </DropdownMenuItem>
                   ) : (
                     <DropdownMenuItem asChild>
-                      <Link to={`agent/${usertype.username}/generateQR`} className="flex cursor-pointer items-center gap-2 rounded-xl py-2 hover:bg-cream-dark transition-colors font-bold text-soil">
+                      <Link to={`agent/${usertype?.username}/generateQR`} className="flex cursor-pointer items-center gap-2 rounded-xl py-2 hover:bg-cream-dark transition-colors font-bold text-soil">
                         <QrCode className="h-4 w-4 text-leaf" />
                         Generate QR
                       </Link>
@@ -124,8 +128,8 @@ const Navbar: React.FC = () => {
               </DropdownMenu>
             )}
 
-            {/* Mobile menu for logged-in users only */}
-            {Status && (
+            {/* Mobile menu for logged-in users only - DISABLED */}
+            {false && ( // Changed from Status to false to disable auth check
               <div className="md:hidden">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -143,7 +147,7 @@ const Navbar: React.FC = () => {
                       </DropdownMenuItem>
                     ) : (
                       <DropdownMenuItem asChild>
-                        <Link to={`agent/${usertype.username}/generateQR`} className="flex cursor-pointer items-center gap-2 rounded-xl py-2 font-bold text-soil hover:bg-cream-dark transition-colors">
+                        <Link to={`agent/${usertype?.username}/generateQR`} className="flex cursor-pointer items-center gap-2 rounded-xl py-2 font-bold text-soil hover:bg-cream-dark transition-colors">
                           <QrCode className="h-4 w-4 text-leaf" />
                           Generate QR
                         </Link>
