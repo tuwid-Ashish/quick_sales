@@ -59,14 +59,17 @@ interface Customer {
   pincode: string;
 }
 
+const productImage = (fileName: string) => `/images/product-sample-image/${encodeURIComponent(fileName)}`;
+
 const contents = [
-  { icon: Shovel, title: "Kid-Safe Tools", text: "Miniature trowel and fork designed for small hands." },
-  { icon: Package, title: "Premium Coco Peat", text: "Expands with water to create the perfect soil bed." },
-  { icon: Droplets, title: "Mist Bottle", text: "Gentle watering spray to keep sprouts happy." },
-  { icon: Sprout, title: "Organic Seeds", text: "Fast-growing seeds guaranteed to sprout in days." },
-  { icon: Leaf, title: "Eco-Friendly Pots", text: "Biodegradable starter pots perfect for windowsills." },
-  { icon: BookOpen, title: "Storybook Guide", text: "A fun, illustrated manual for parents and kids." },
-];
+  { image: productImage("tools.png"), title: "Kid-Safe Tools", text: "Miniature trowel and fork designed for small hands." },
+  { image: productImage("coco pots.png"), title: "Eco-Friendly Pots", text: "Biodegradable starter pots perfect for windowsills.." },
+  { image: productImage("spray bottle.png"), title: "Mist Bottle", text: "Gentle watering spray to keep sprouts happy." },
+  { image: productImage("seed image.png"), title: "Organic Seeds", text: "Fast-growing seeds guaranteed to sprout in days." },
+  { image: productImage("soil-mixtures.png"), title: "Premium Soil Mixture", text: "Biodegradable starter pots perfect for windowsills." },
+  { image: productImage("featurimage.png"), title: "Storybook Guide", text: "A fun, illustrated manual for parents and kids." },
+  ];
+
 
 const reviews = [
   {
@@ -552,11 +555,16 @@ const ProductDetailPage: React.FC = () => {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {contents.map((item, idx) => (
-              <div key={idx} className="bg-white rounded-[2rem] p-8 border-2 border-cream-dark shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-                <div className="w-16 h-16 rounded-2xl bg-cream-dark text-leaf flex items-center justify-center mb-6 group-hover:bg-sun group-hover:text-soil transition-colors duration-300">
-                  <item.icon className="w-8 h-8" />
+              <div key={idx} className="bg-white rounded-[2rem] p-5 sm:p-6 border-2 border-cream-dark shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group overflow-hidden">
+                <div className="relative w-full aspect-[4/3] rounded-[1.5rem] bg-cream-dark/40 overflow-hidden mb-6 border border-white/70">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="h-full w-full object-contain p-3 sm:p-4 transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
                 </div>
-                <h3 className="text-xl font-bold text-soil mb-2 font-display">{item.title}</h3>
+                <h3 className="text-xl font-bold text-soil mb-2 font-display leading-tight">{item.title}</h3>
                 <p className="text-soil/70 font-medium leading-relaxed text-sm">{item.text}</p>
               </div>
             ))}

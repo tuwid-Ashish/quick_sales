@@ -9,6 +9,50 @@ import { uploadOncloudinary } from "../utils/Cloudinary.js";
 import Shop from "../models/shop.model.js";
 import { processCommission } from "./payment.controller.js";
 
+const isHttpUrl = (value) => typeof value === "string" && /^https?:\/\/.+/.test(value);
+
+const toArray = (value) => {
+    if (Array.isArray(value)) return value;
+    if (value === undefined || value === null || value === "") return [];
+    return [value];
+};
+
+const parseJsonArray = (value) => {
+    if (typeof value !== "string" || !value.trim()) return [];
+
+    try {
+        const parsed = JSON.parse(value);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch {
+        return [];
+    }
+};
+
+const buildOrderedImages = ({ uploadedImages, existingImages, imageOrder }) => {
+    const existingImageList = toArray(existingImages);
+
+    if (!imageOrder.length) {
+        return [...uploadedImages, ...existingImageList];
+    }
+
+    let uploadedIndex = 0;
+    let existingIndex = 0;
+
+    return imageOrder
+        .map((entry) => {
+            if (entry?.isExisting) {
+                const nextExistingImage = existingImageList[existingIndex];
+                existingIndex += 1;
+                return nextExistingImage;
+            }
+
+            const nextUploadedImage = uploadedImages[uploadedIndex];
+            uploadedIndex += 1;
+            return nextUploadedImage;
+        })
+        .filter(Boolean);
+};
+
 
 const AddSaleProduct = asyncHandler(async (req,res)=>{
     try {
@@ -27,12 +71,13 @@ const AddSaleProduct = asyncHandler(async (req,res)=>{
             throw new ApiError(400, `Missing required fields: ${missingFields.join(", ")}`);
         }
 
-        const {name,price,description,category,stock,bulkDiscountPercentage} = body
+        const {name,price,description,category,stock,bulkDiscountPercentage,featuredImage,featuredImageIndex,imageOrder} = body
         
-        const cloudinaryImages = [];
+        const originalImages = [];
+        const thumbnailImages = [];
         for (const upImg of poductImages) {
             const result = await uploadOncloudinary(upImg);
-            cloudinaryImages.push(result.url);
+            originalImages.push(result.url);
 
             // Create a thumbnail
             const thumbnailResult = await uploadOncloudinary(upImg, {
@@ -40,8 +85,18 @@ const AddSaleProduct = asyncHandler(async (req,res)=>{
                 height: 200,
                 crop: "fill"
             });
-            cloudinaryImages.push(thumbnailResult.url); // You might want to store this separately
+            thumbnailImages.push(thumbnailResult.url); // You might want to store this separately
         }
+
+        const orderedImages = buildOrderedImages({
+            uploadedImages: originalImages,
+            existingImages: [],
+            imageOrder: parseJsonArray(imageOrder)
+        });
+
+        const selectedFeaturedImage = Number.isInteger(Number(featuredImageIndex))
+            ? orderedImages[Number(featuredImageIndex)]
+            : null;
 
         const product = new Product({
             name,
@@ -50,8 +105,9 @@ const AddSaleProduct = asyncHandler(async (req,res)=>{
             category,
             stock,
             bulkDiscountPercentage: bulkDiscountPercentage ? Number(bulkDiscountPercentage) : 0,
-            images:cloudinaryImages.filter(url => !url.includes('w_200')), // Assuming thumbnails are identifiable
-            thumbnails: cloudinaryImages.filter(url => url.includes('w_200'))
+            images: orderedImages,
+            thumbnails: thumbnailImages,
+            featuredImage: isHttpUrl(featuredImage) ? featuredImage : selectedFeaturedImage || orderedImages[0] || null
         })
         await product.save()
         console.log("the product",product);
@@ -87,7 +143,7 @@ const EditSaleProduct = asyncHandler(async (req, res) => {
     try {
         console.log("Validated Body:", body);
         
-        const { name, price, description, category, stock, _id, existingImages, bulkDiscountPercentage } = body;
+        const { name, price, description, category, stock, _id, existingImages, bulkDiscountPercentage, featuredImage, featuredImageIndex, imageOrder } = body;
 
         // ✅ Upload new images to Cloudinary
         const cloudinaryimages = await Promise.all(
@@ -100,8 +156,12 @@ const EditSaleProduct = asyncHandler(async (req, res) => {
         console.log("the data of existing image is we are senting:",existingImages);
         
 
-        // ✅ Ensure existing images are always an array
-        const finalImages = Array.isArray(existingImages) ? cloudinaryimages.concat(existingImages) : cloudinaryimages;
+        // ✅ Rebuild the final image order from the client-sent order metadata
+        const finalImages = buildOrderedImages({
+            uploadedImages: cloudinaryimages,
+            existingImages,
+            imageOrder: parseJsonArray(imageOrder)
+        });
 
         // ✅ Fetch product from DB
         const product = await Product.findById(_id);
@@ -120,6 +180,12 @@ const EditSaleProduct = asyncHandler(async (req, res) => {
         product.stock = stock || product.stock;
         product.bulkDiscountPercentage = bulkDiscountPercentage !== undefined ? Number(bulkDiscountPercentage) : product.bulkDiscountPercentage;
         product.images = finalImages;
+        const selectedFeaturedImage = Number.isInteger(Number(featuredImageIndex))
+            ? finalImages[Number(featuredImageIndex)]
+            : null;
+        product.featuredImage = isHttpUrl(featuredImage)
+            ? featuredImage
+            : selectedFeaturedImage || product.featuredImage || finalImages[0] || null;
 
         await product.save();
 

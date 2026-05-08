@@ -22,8 +22,8 @@ const router = Router();
 router.route("/get-products").get(GetSaleProducts);
 router.route("/get-product/:id").get(GetSaleProductById);
 // secure routers for admin
-router.route("/add-product").post(AuthTokenverify,upload.array("images[]", 4), AddSaleProduct);
-router.route("/edit-product").post(AuthTokenverify,upload.array("images[]", 4),EditSaleProduct);
+router.route("/add-product").post(AuthTokenverify, upload.array("images", 8), AddSaleProduct);
+router.route("/edit-product").post(AuthTokenverify, upload.array("images", 8), EditSaleProduct);
 router.route("/delete-product/:id").delete(AuthTokenverify, DeleteSaleProduct);
 
 // refreral related routes

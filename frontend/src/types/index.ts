@@ -39,6 +39,7 @@ export interface ProductFormData {
   bulkDiscountPercentage?: number;
   images: string[];
   thumbnails?: string[];
+  featuredImage?: string;
 }
 
 export interface Orderdata{
