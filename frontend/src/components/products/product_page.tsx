@@ -12,16 +12,16 @@ import { useAppDispatch, useAppSelector } from "@/Store/Store";
 import { addrefreral } from "@/Store/ReferalSlice";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import {
-  BookOpen,
+  // BookOpen,
   CheckCircle2,
-  Droplets,
+  // Droplets,
   Gift,
   Leaf,
-  Package,
+  // Package,
   ShieldCheck,
   ShoppingCart,
-  Shovel,
-  Sprout,
+  // Shovel,
+  // Sprout,
   Truck,
   Star,
   PlayCircle
@@ -67,7 +67,7 @@ const contents = [
   { image: productImage("spray bottle.png"), title: "Mist Bottle", text: "Gentle watering spray to keep sprouts happy." },
   { image: productImage("seed image.png"), title: "Organic Seeds", text: "Fast-growing seeds guaranteed to sprout in days." },
   { image: productImage("soil-mixtures.png"), title: "Premium Soil Mixture", text: "Biodegradable starter pots perfect for windowsills." },
-  { image: productImage("featurimage.png"), title: "Storybook Guide", text: "A fun, illustrated manual for parents and kids." },
+  { image: productImage("plant-guide.png"), title: "Storybook Guide", text: "A fun, illustrated manual for parents and kids." },
   ];
 
 
