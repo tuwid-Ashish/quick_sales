@@ -13,3 +13,4 @@ export const DB_NAME = "quicksales"
 export const DOMAIN_URL = process.env.FRONTEND_DOMAIN_URL
 export const INVENTRY_URL = process.env.INVENTRY_URL
 
+// http://localhost:4000/api/v1/payment/undefined/payment-status?status=success&order_id=69fee2390041bad87db703a3

@@ -51,6 +51,7 @@
 
 @layer base {
   :root {
+    --nav-height: 2rem;
     --background: 45 100% 95%;
     --foreground: 20 25% 20%;
 

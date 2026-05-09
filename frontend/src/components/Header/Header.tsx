@@ -12,20 +12,48 @@ import { Menu, LogOut, QrCode, LayoutDashboard, ShoppingBag } from "lucide-react
 import { useAppDispatch, useAppSelector } from "@/Store/Store";
 import { logoutUser } from "@/api";
 import { logout } from "@/Store/AuthSlice";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Navbar: React.FC = () => {
   // const Status = useAppSelector((state) => state.Auth.status);
   const usertype = useAppSelector((state) => state.Auth.user);
   const navigator = useNavigate();
   const dispatch = useAppDispatch();
-  const [scrolled, setScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollYRef = useRef(0);
 
   // DISABLED: Auth check - always show Buy Now button for now
   // const authDisabled = true; // Set to false to re-enable auth check
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    lastScrollYRef.current = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY <= 20) {
+        setIsVisible(true);
+        lastScrollYRef.current = currentScrollY;
+        return;
+      }
+
+      const movingDown = currentScrollY > lastScrollYRef.current;
+      const delta = Math.abs(currentScrollY - lastScrollYRef.current);
+
+      // Ignore tiny scroll jitter to keep the nav from flickering.
+      if (delta < 6) {
+        return;
+      }
+
+      if (movingDown) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+
+      lastScrollYRef.current = currentScrollY;
+    };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -43,22 +71,18 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className={`sticky top-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "bg-white/95 shadow-lg shadow-black/5 backdrop-blur-xl border-b border-cream-dark"
-          : "bg-transparent"
+      className={`fixed inset-x-0 top-0 z-50 border-b border-white/70 bg-white/30 shadow-[0_12px_30px_rgba(45,64,38,0.10)] backdrop-blur-xl transition-all duration-400 ${
+        isVisible ? "translate-y-0" : "-translate-y-full pointer-events-none"
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-18 items-center justify-between sm:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img
               src="/images/logo.png"
               alt="Get Gardening"
-              className={`h-16 w-auto object-contain transition-all duration-300 sm:h-20 drop-shadow-sm ${
-                scrolled ? "scale-90" : "scale-100"
-              }`}
+              className="h-14 w-auto object-contain transition-transform duration-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.22)] sm:h-16"
             />
           </Link>
 
@@ -70,7 +94,7 @@ const Navbar: React.FC = () => {
                 {/* Buy Now CTA */}
                 <Link to="/products">
                   <Button
-                    className="relative rounded-full bg-sun px-6 py-2.5 text-sm font-extrabold text-soil hover:bg-sun-light transition-all duration-300 animate-bounce-in shadow-md hover:shadow-lg"
+                    className="relative rounded-full border border-amber-300/50 bg-sun px-4 py-2.5 text-sm font-extrabold text-soil hover:bg-sun-light transition-all duration-300 animate-bounce-in shadow-md hover:shadow-lg sm:px-6"
                   >
                     <ShoppingBag className="mr-2 h-4 w-4" />
                     Buy Now — ₹749
@@ -134,7 +158,7 @@ const Navbar: React.FC = () => {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="rounded-full hover:bg-cream-dark transition-colors">
-                      <Menu className={`h-6 w-6 ${scrolled ? "text-soil" : "text-soil drop-shadow-sm"}`} />
+                      <Menu className="h-6 w-6 text-soil drop-shadow-sm" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 rounded-2xl bg-white shadow-xl p-2 border-cream-dark">

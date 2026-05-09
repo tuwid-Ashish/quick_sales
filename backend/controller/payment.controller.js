@@ -18,6 +18,8 @@ import {
 } from "../services/payout_to_refreal.js";
 import mongoose from "mongoose";
 
+const redirectToPaymentStatus = (res, url) => res.redirect(303, url);
+
 export const CreateOrder = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -148,9 +150,10 @@ export const CapturePayment = async (req, res) => {
 
     if (!razorpay_payment_id || !razorpay_order_id || !razorpay_signature) {
       console.error("Missing payment details in request body");
-      return res
-        .status(400)
-        .redirect(`${DOMAIN_URL}/payment-status?status=failed`);
+      return redirectToPaymentStatus(
+        res,
+        `${DOMAIN_URL}/payment-status?status=failed`
+      );
     }
 
     // Verify the payment signature
@@ -164,11 +167,10 @@ export const CapturePayment = async (req, res) => {
     );
 
     if (generated_signature !== razorpay_signature) {
-      return res
-        .status(400)
-        .rediect(
-          `${DOMAIN_URL}/payment-status?status=failed&order_id=${razorpay_order_details.receipt}`
-        );
+      return redirectToPaymentStatus(
+        res,
+        `${DOMAIN_URL}/payment-status?status=failed&order_id=${razorpay_order_details.receipt}`
+      );
     }
 
     const razorpay_payment_details = await instance.payments.fetch(
@@ -198,16 +200,16 @@ export const CapturePayment = async (req, res) => {
 
       if (!failorder) {
         console.error("Order not found in database");
-        return res.redirect(
+        return redirectToPaymentStatus(
+          res,
           `${DOMAIN_URL}/payment-status?status=failed&order_id=${"null"}`
         );
       }
 
-      return res
-        .status(400)
-        .redirect(
-          `${DOMAIN_URL}/payment-status?status=failed&order_id=${razorpay_order_details.receipt}`
-        );
+      return redirectToPaymentStatus(
+        res,
+        `${DOMAIN_URL}/payment-status?status=failed&order_id=${razorpay_order_details.receipt}`
+      );
     }
 
     // Update order status based on payment capture
@@ -226,7 +228,8 @@ export const CapturePayment = async (req, res) => {
 
     if (!updatedOrder) {
       console.error("Order not found in database");
-      return res.redirect(
+      return redirectToPaymentStatus(
+        res,
         `${DOMAIN_URL}/payment-status?status=failed&order_id=${"null"}`
       );
     }
@@ -272,7 +275,8 @@ export const CapturePayment = async (req, res) => {
       }
     }
 
-    return res.redirect(
+    return redirectToPaymentStatus(
+      res,
       `${DOMAIN_URL}/payment-status?status=success&order_id=${updatedOrder._id}`
     );
   } catch (error) {
@@ -281,7 +285,8 @@ export const CapturePayment = async (req, res) => {
     const razorpay_order_details = await instance.orders.fetch(
         razorpay_order_id
       );  
-    return res.redirect(
+    return redirectToPaymentStatus(
+      res,
       `${DOMAIN_URL}/payment-status?status=failed&order_id=${razorpay_order_details?.receipt|| "null"}`
     );
   }

@@ -35,7 +35,10 @@ function App() {
   return (
     <div className="w-full bg-cream min-h-screen">
       {!isPaymentStatusPage && <Header />}
-      <main className="min-h-screen">
+      <main
+        className="min-h-screen"
+        style={!isPaymentStatusPage ? { paddingTop: "var(--nav-height)" } : undefined}
+      >
         <Outlet />
       </main>
       {!isPaymentStatusPage && <Footer />}
